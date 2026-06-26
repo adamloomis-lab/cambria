@@ -3,40 +3,45 @@ import { company } from '../data/site'
 
 export default function Accessibility() {
   return (
-    <LegalLayout title="Accessibility Statement" updated="May 2026">
+    <LegalLayout title="Accessibility Statement" updated="June 2026">
+      <h2>Our commitment</h2>
       <p>
-        {company.name} is committed to making our website accessible and welcoming to everyone, including
-        people with disabilities. We want every guest, online and in our dining room, to be able to find
-        our menu, hours, and location with ease.
+        This site is built to WCAG 2.1 AA, the standard referenced by the ADA for web accessibility.
+        We review and update our accessibility practices on an ongoing basis.
       </p>
 
-      <h2>Our Commitment</h2>
+      <h2>What we have done</h2>
       <p>
-        We aim to conform to the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA. These guidelines
-        explain how to make web content more accessible for people with a wide range of disabilities. We
-        build this Site with semantic markup, descriptive alternative text for images, keyboard-navigable
-        controls, and color choices intended to meet contrast standards.
+        We have taken the following steps to help ensure this site is usable by everyone:
       </p>
+      <ul>
+        <li>
+          Skip links allow keyboard and screen reader users to bypass navigation and get straight to
+          the main content without tabbing through every menu item.
+        </li>
+        <li>
+          A visible focus outline appears on every interactive element when navigated by keyboard,
+          so it is always clear where focus is on the page.
+        </li>
+        <li>
+          Text colors are chosen to meet the 4.5:1 minimum contrast ratio for readability by people
+          with low vision.
+        </li>
+        <li>
+          All form fields, buttons, and interactive elements have descriptive labels so screen
+          readers can accurately describe them to users.
+        </li>
+        <li>
+          Animations automatically reduce for users who have the Reduce Motion preference enabled
+          on their device.
+        </li>
+      </ul>
 
-      <h2>Ongoing Effort</h2>
+      <h2>Report an issue</h2>
       <p>
-        Accessibility is an ongoing effort. We periodically review the Site and work to improve it. Some
-        content provided by third parties (such as embedded maps or social media) may not be fully under
-        our control, and we encourage those providers to maintain accessible experiences.
-      </p>
-
-      <h2>Known Limitations</h2>
-      <p>
-        Despite our efforts, some portions of the Site may not yet be fully accessible. If you encounter a
-        barrier, please let us know, your feedback helps us improve.
-      </p>
-
-      <h2>Contact Us About Accessibility</h2>
-      <p>
-        If you have trouble accessing any part of this Site, or have a suggestion, please call us at{' '}
-        <a href={company.phoneHref}>{company.phone}</a> or visit us at {company.addressOneLine}. We&rsquo;ll
-        do our best to provide the information you need in a way that works for you, and to address the
-        issue promptly.
+        If you encounter any accessibility barrier on this site, please reach out and we will
+        address it promptly. You can call us at{' '}
+        <a href={company.phoneHref}>{company.phone}</a> and we will be happy to help.
       </p>
     </LegalLayout>
   )
