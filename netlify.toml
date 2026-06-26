@@ -1,0 +1,35 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Server-side function that texts the owner on each form submission (Twilio).
+# Dormant until TWILIO_* env vars are set.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Prerendered per-route HTML is served directly (Netlify serves existing files
+# before applying this fallback). The fallback only catches client-side routes
+# that have no prerendered file.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
+
+[[headers]]
+  for = "/videos/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cambria's Bistro | Italian Restaurant in Downtown Wadsworth, OH</title>
+    <meta
+      name="description"
+      content="Cambria's Bistro, a family-owned Italian restaurant in the heart of downtown Wadsworth, OH. Hand-made pasta, flatbreads, a full bar, private events and catering. Reservations (330) 331-5282." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#4a0e0e" />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <!-- Fonts are self-hosted and bundled by Vite from src/index.css; no external font CDN. -->
+    <!--SEO_HEAD-->
+    <!-- Gate scroll-reveal styles on JS so no-JS / failed-bundle visitors see all content. -->
+    <script>
+      document.documentElement.classList.add('reveal-ready')
+    </script>
+  </head>
+  <body>
+    <!-- Hidden static forms so Netlify detects them (and their fields) at build time.
+         The live React forms post to these names. -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="tel" name="phone" />
+      <input type="email" name="email" />
+      <input type="text" name="subject" />
+      <textarea name="message"></textarea>
+    </form>
+    <form name="reservation" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="tel" name="phone" />
+      <input type="email" name="email" />
+      <input type="date" name="date" />
+      <input type="time" name="time" />
+      <input type="text" name="party" />
+      <input type="text" name="occasion" />
+      <textarea name="notes"></textarea>
+    </form>
+    <!-- Job application form; multipart so the resume file uploads. -->
+    <form name="application" netlify netlify-honeypot="bot-field" enctype="multipart/form-data" hidden>
+      <input type="text" name="name" />
+      <input type="tel" name="phone" />
+      <input type="email" name="email" />
+      <input type="text" name="position" />
+      <input type="text" name="availability" />
+      <textarea name="experience"></textarea>
+      <input type="file" name="resume" />
+    </form>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
