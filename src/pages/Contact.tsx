@@ -61,7 +61,7 @@ export default function Contact() {
     <>
       {/* ---------- HEADER ---------- */}
       <section className="relative flex min-h-[48vh] items-end overflow-hidden bg-charcoal">
-        <Backdrop src="/images/interior-bar.webp" position="center 55%" />
+        <Backdrop src="/images/storefront.webp" position="center 65%" />
         <div className="container-x relative z-10 pt-36 pb-16 text-center">
           <p className="eyebrow on-dark mx-auto">Right on Main Street</p>
           <h1 className="mt-4 font-display text-display-lg-mobile text-cream md:text-display-lg">

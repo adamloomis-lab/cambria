@@ -226,7 +226,7 @@ export function getPageMeta(rawPath: string): PageMeta {
         description:
           'A family-owned Italian bistro in downtown Wadsworth where time-honored recipes meet a modern grill and pub. Meet the family behind the menu at Cambria’s.',
         canonical: pageUrl('/about'),
-        ogImage: abs('/images/interior-bar.webp'),
+        ogImage: abs('/images/storefront.webp'),
         jsonLd: [
           restaurantSchema(),
           {
@@ -247,7 +247,7 @@ export function getPageMeta(rawPath: string): PageMeta {
         description:
           'Reserve your table at Cambria’s Bistro in downtown Wadsworth. Send a reservation request online or call (330) 331-5282. We’ll confirm your table.',
         canonical: pageUrl('/reservations'),
-        ogImage: abs('/images/interior-bar.webp'),
+        ogImage: abs('/images/stuffed-shells.webp'),
         jsonLd: [
           restaurantSchema(),
           breadcrumb([
@@ -261,7 +261,7 @@ export function getPageMeta(rawPath: string): PageMeta {
         title: "Contact & Hours | Cambria's Bistro, Wadsworth OH",
         description: `Visit Cambria’s Bistro at ${company.addressOneLine}. Hours, directions, parking and contact details. Call ${company.phone}.`,
         canonical: pageUrl('/contact'),
-        ogImage: abs('/images/interior-bar.webp'),
+        ogImage: abs('/images/storefront.webp'),
         jsonLd: [
           restaurantSchema(),
           faqSchema(),
@@ -283,7 +283,7 @@ export function getPageMeta(rawPath: string): PageMeta {
         description:
           'Now hiring at Cambria’s Bistro in downtown Wadsworth. Front of house, kitchen and bar. Join a family-owned team that cooks from scratch. Apply online.',
         canonical: pageUrl('/employment'),
-        ogImage: abs('/images/interior-bar.webp'),
+        ogImage: abs('/images/storefront.webp'),
         jsonLd: [
           restaurantSchema(),
           breadcrumb([

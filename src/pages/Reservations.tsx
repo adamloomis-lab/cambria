@@ -66,7 +66,7 @@ export default function Reservations() {
     <>
       {/* ---------- HERO ---------- */}
       <section className="relative flex min-h-[52vh] items-end overflow-hidden">
-        <Backdrop src="/images/interior-bar.webp" position="center 55%" />
+        <Backdrop src="/images/stuffed-shells.webp" position="center 50%" />
         <div className="container-x relative z-10 pb-14 pt-36 text-center">
           <p className="eyebrow on-dark mx-auto">Reserve Your Table</p>
           <h1 className="mt-4 font-display text-display-lg-mobile text-cream md:text-display-lg">

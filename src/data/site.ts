@@ -433,9 +433,9 @@ export const menuGroups: MenuGroup[] = [
 // Showcase food shots for the home "From the Kitchen" band. No specific dish
 // names — we don't claim what each plate is, we just let the food look good.
 export const featuredShowcase = [
-  { src: '/images/tortellini-vodka.webp', alt: 'A plated pasta from the Cambria’s kitchen' },
-  { src: '/images/stuffed-shells.webp', alt: 'A plated pasta from the Cambria’s kitchen' },
-  { src: '/images/ravioli.webp', alt: 'A plated pasta from the Cambria’s kitchen' },
+  { src: '/images/salad-arugula-strawberry.webp', alt: 'A fresh dish from Cambria’s kitchen' },
+  { src: '/images/tortellini-vodka.webp', alt: 'A hand-made pasta from Cambria’s kitchen' },
+  { src: '/images/cake-strawberry.webp', alt: 'A house dessert from Cambria’s kitchen' },
 ]
 
 // Bar / beverage highlights for the home "Bar & Cellar" band.

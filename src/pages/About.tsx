@@ -17,7 +17,7 @@ export default function About() {
     <>
       {/* ---------- HERO ---------- */}
       <section className="relative flex min-h-[56vh] items-end overflow-hidden">
-        <Backdrop src="/images/interior-bar.webp" position="center 55%" />
+        <Backdrop src="/images/storefront.webp" position="center 65%" />
         <div className="container-x relative z-10 pb-14 pt-36 text-center">
           <p className="eyebrow on-dark mx-auto">Our Story</p>
           <h1 className="mt-4 font-display text-display-lg-mobile text-cream md:text-display-lg">
@@ -42,25 +42,31 @@ export default function About() {
             </div>
           </div>
           <div className="reveal space-y-5">
-            <img
-              src="/images/wine-selection.webp"
-              alt="A selection of wines at Cambria's bar"
-              loading="lazy"
-              className="aspect-[4/3] w-full object-cover"
-            />
+            <div className="elegant-img aspect-[4/3]">
+              <img
+                src="/images/wine-selection.webp"
+                alt="A selection of wines at Cambria's bar"
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </div>
             <div className="grid grid-cols-2 gap-5">
-              <img
-                src="/images/caprese.webp"
-                alt="A dish from Cambria's kitchen"
-                loading="lazy"
-                className="aspect-square w-full object-cover"
-              />
-              <img
-                src="/images/spaghetti-pomodoro.webp"
-                alt="A dish from Cambria's kitchen"
-                loading="lazy"
-                className="aspect-square w-full object-cover"
-              />
+              <div className="elegant-img aspect-square">
+                <img
+                  src="/images/caprese.webp"
+                  alt="A dish from Cambria's kitchen"
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="elegant-img aspect-square">
+                <img
+                  src="/images/spaghetti-pomodoro.webp"
+                  alt="A dish from Cambria's kitchen"
+                  loading="lazy"
+                  className="h-full w-full object-cover"
+                />
+              </div>
             </div>
           </div>
         </div>

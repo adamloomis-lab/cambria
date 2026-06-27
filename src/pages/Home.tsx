@@ -67,11 +67,11 @@ export default function Home() {
             </Link>
           </div>
           <div className="reveal relative">
-            <div className="relative aspect-[4/5] overflow-hidden">
+            <div className="elegant-img relative aspect-[4/5]">
               <div className="parallax absolute -inset-y-[8%] inset-x-0" style={{ ['--p-amt']: '36px' } as CSSProperties}>
                 <img
-                  src="/images/interior-bar.webp"
-                  alt="Guests dining in Cambria's warm bar and dining room"
+                  src="/images/caprese-stack.webp"
+                  alt="A dish from Cambria's kitchen"
                   loading="lazy"
                   className="h-full w-full object-cover"
                 />
@@ -110,12 +110,12 @@ export default function Home() {
           />
           <div className="reveal-group mt-14 grid gap-6 md:grid-cols-3">
             {featuredShowcase.map((s) => (
-              <div key={s.src} className="group overflow-hidden">
+              <div key={s.src} className="elegant-img group aspect-[5/4]">
                 <img
                   src={s.src}
                   alt={s.alt}
                   loading="lazy"
-                  className="aspect-[5/4] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
             ))}
@@ -139,7 +139,7 @@ export default function Home() {
           <div className="reveal-group mt-14 grid gap-8 md:grid-cols-3">
             {barHighlights.map((b) => (
               <article key={b.title} className="border-t border-gold/60 pt-6">
-                <div className="aspect-[4/5] overflow-hidden">
+                <div className="elegant-img aspect-[4/5]">
                   <img
                     src={b.img}
                     alt={b.title}

@@ -253,6 +253,33 @@
   }
 }
 
+/* Elegant content-image frame. Wraps any img to lift it off the page with a
+   soft warm drop shadow + the faintest top/bottom inner vignette for depth,
+   so photos read dimensional and editorial instead of flat. The wrapper should
+   set its own aspect + overflow; the inner img fills it. */
+.elegant-img {
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 16px 38px -12px rgba(33, 28, 26, 0.45),
+    0 6px 14px -4px rgba(33, 28, 26, 0.22);
+}
+.elegant-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.10) 0%,
+    rgba(0, 0, 0, 0) 18%,
+    rgba(0, 0, 0, 0) 72%,
+    rgba(0, 0, 0, 0.20) 100%
+  );
+  /* Sit above the image so the vignette + shadow read as one frame. */
+  z-index: 1;
+}
+
 /* Soft scrim so hero text/logo stays legible over imagery */
 .hero-scrim {
   background: linear-gradient(
