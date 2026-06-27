@@ -1,9 +1,14 @@
 import { useState, useRef } from 'react'
 import type { FormEvent } from 'react'
-import { Check, ChevronDown, Phone, Clock, Users } from 'lucide-react'
+import {
+  Phone, Clock, Users, Send, ArrowRight,
+  Cake, Heart, Wine, PartyPopper, UtensilsCrossed,
+  type LucideIcon,
+} from 'lucide-react'
 import { company } from '../data/site'
 import Backdrop from '../components/Backdrop'
 import HoursList from '../components/HoursList'
+import { FloatField, IconCards, LightSelect, SuccessCheck } from '../components/FluidField'
 
 const encode = (data: Record<string, string>) =>
   Object.keys(data)
@@ -12,12 +17,25 @@ const encode = (data: Record<string, string>) =>
 
 const field =
   'w-full border border-line bg-paper px-4 py-3.5 text-body-md text-ink placeholder:text-ink-faint focus:border-oxblood focus:outline-none focus:ring-1 focus:ring-oxblood/30'
-const labelCls = 'mb-2 block text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-faint'
+const labelCls = 'mb-2 block font-sans text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-faint'
+
+// Occasion icon cards. Submitted `value` reads naturally for the kitchen and
+// is carried into the same Netlify `occasion` field the text input used.
+const OCCASION_OPTIONS: { value: string; label: string; icon: LucideIcon }[] = [
+  { value: 'Birthday', label: 'Birthday', icon: Cake },
+  { value: 'Anniversary', label: 'Anniversary', icon: Heart },
+  { value: 'Date Night', label: 'Date night', icon: Wine },
+  { value: 'Celebration', label: 'Celebration', icon: PartyPopper },
+  { value: 'Just Dinner', label: 'Just dinner', icon: UtensilsCrossed },
+]
+
+const PARTY_OPTIONS = ['1', '2', '3', '4', '5', '6', '7', '8+']
 
 export default function Reservations() {
   const [sent, setSent] = useState(false)
   const [error, setError] = useState(false)
   const [firstName, setFirstName] = useState('')
+  const [occasion, setOccasion] = useState('')
   const formCardRef = useRef<HTMLDivElement>(null)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -35,6 +53,7 @@ export default function Reservations() {
       setFirstName((data.name || '').trim().split(/\s+/)[0] || '')
       setSent(true)
       form.reset()
+      setOccasion('')
       requestAnimationFrame(() =>
         formCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
       )
@@ -70,18 +89,24 @@ export default function Reservations() {
               <h2 className="mt-4 font-display text-headline-md text-ink">Tell us the details</h2>
 
               {sent ? (
-                <div className="mt-8 flex flex-col items-center gap-4 border border-gold/50 bg-gold/8 px-6 py-12 text-center">
-                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-oxblood text-on-oxblood">
-                    <Check size={28} />
+                <div className="rise mt-8 flex flex-col items-center gap-4 border border-gold/50 bg-gold/8 px-6 py-12 text-center">
+                  <span className="flex h-16 w-16 items-center justify-center">
+                    <SuccessCheck />
                   </span>
                   <p className="font-display text-headline-md text-ink">
-                    Request received{firstName ? `, ${firstName}` : ''}!
+                    Thank You{firstName ? `, ${firstName}` : ''}!
                   </p>
-                  <p className="text-body-md text-ink-soft">
-                    Thank you. We&rsquo;ll reach out to confirm your table. A reservation isn&rsquo;t final
-                    until we&rsquo;ve confirmed it, so if you don&rsquo;t hear back soon, please call us at{' '}
-                    {company.eventsPhone}.
+                  <p className="max-w-md text-body-md text-ink-soft">
+                    We&rsquo;ll reach out to confirm your table. A reservation isn&rsquo;t final until
+                    we&rsquo;ve confirmed it, so if you don&rsquo;t hear back soon, please give us a call.
                   </p>
+                  <a
+                    href={company.eventsPhoneHref}
+                    className="group relative mt-1 inline-flex items-center gap-2 overflow-hidden bg-oxblood px-7 py-3.5 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-on-oxblood transition-colors hover:bg-oxblood-2"
+                  >
+                    <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-white/25 blur-md group-hover:[animation:sheen_0.9s_ease]" />
+                    <Phone size={15} className="text-gold-soft" /> {company.eventsPhone}
+                  </a>
                 </div>
               ) : (
                 <form
@@ -93,25 +118,19 @@ export default function Reservations() {
                   className="mt-7 space-y-5"
                 >
                   <input type="hidden" name="form-name" value="reservation" />
+                  {/* Mirrors the icon-card selection into the Netlify `occasion` field. */}
+                  <input type="hidden" name="occasion" value={occasion} />
                   <p className="hidden">
                     <label>
                       Don’t fill this out: <input name="bot-field" />
                     </label>
                   </p>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <label className={labelCls} htmlFor="r-name">Name</label>
-                      <input id="r-name" className={field} type="text" name="name" required />
-                    </div>
-                    <div>
-                      <label className={labelCls} htmlFor="r-phone">Phone</label>
-                      <input id="r-phone" className={field} type="tel" name="phone" required />
-                    </div>
+                    <FloatField idPrefix="r" name="name" label="Name" required />
+                    <FloatField idPrefix="r" name="phone" label="Phone" type="tel" required />
                   </div>
-                  <div>
-                    <label className={labelCls} htmlFor="r-email">Email</label>
-                    <input id="r-email" className={field} type="email" name="email" required />
-                  </div>
+                  <FloatField idPrefix="r" name="email" label="Email" type="email" required />
+
                   <div className="grid gap-4 sm:grid-cols-3">
                     <div>
                       <label className={labelCls} htmlFor="r-date">Date</label>
@@ -121,27 +140,30 @@ export default function Reservations() {
                       <label className={labelCls} htmlFor="r-time">Time</label>
                       <input id="r-time" className={field} type="time" name="time" required />
                     </div>
-                    <div>
-                      <label className={labelCls} htmlFor="r-party">Party size</label>
-                      <div className="relative">
-                        <select id="r-party" name="party" defaultValue="" required className={`${field} appearance-none pr-10`}>
-                          <option value="" disabled>Guests</option>
-                          {['1', '2', '3', '4', '5', '6', '7', '8+'].map((n) => (
-                            <option key={n}>{n}</option>
-                          ))}
-                        </select>
-                        <ChevronDown size={18} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-ink-faint" />
-                      </div>
-                    </div>
+                    <LightSelect
+                      idPrefix="r"
+                      name="party"
+                      label="Party size"
+                      options={PARTY_OPTIONS}
+                      placeholder="Guests"
+                      required
+                    />
                   </div>
-                  <div>
-                    <label className={labelCls} htmlFor="r-occasion">Occasion (optional)</label>
-                    <input id="r-occasion" className={field} type="text" name="occasion" placeholder="Birthday, anniversary, date night…" />
-                  </div>
-                  <div>
-                    <label className={labelCls} htmlFor="r-notes">Special requests (optional)</label>
-                    <textarea id="r-notes" className={field} name="notes" rows={3} placeholder="Seating preferences, allergies, high chair…" />
-                  </div>
+
+                  <IconCards
+                    legend="Occasion (optional)"
+                    options={OCCASION_OPTIONS}
+                    value={occasion}
+                    onChange={setOccasion}
+                  />
+
+                  <FloatField
+                    idPrefix="r"
+                    name="notes"
+                    label="Special requests (seating, allergies, high chair…)"
+                    textarea
+                    rows={3}
+                  />
                   {error && (
                     <p className="text-body-md text-error">
                       Something went wrong sending your request. Please try again, or call {company.eventsPhone}.
@@ -149,9 +171,11 @@ export default function Reservations() {
                   )}
                   <button
                     type="submit"
-                    className="w-full bg-oxblood px-8 py-4 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-on-oxblood transition-colors hover:bg-oxblood-2"
+                    className="group relative flex w-full items-center justify-center gap-2.5 overflow-hidden bg-oxblood px-8 py-4 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-on-oxblood transition-colors hover:bg-oxblood-2"
                   >
-                    Request Reservation
+                    <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-white/25 blur-md group-hover:[animation:sheen_0.9s_ease]" />
+                    <Send size={14} /> Request Reservation
+                    <ArrowRight size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
                   <p className="text-center text-[13px] text-ink-faint">
                     Requests are confirmed by our team, not booked instantly.

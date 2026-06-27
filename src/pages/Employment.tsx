@@ -1,7 +1,12 @@
 import { useState, useRef } from 'react'
 import type { FormEvent } from 'react'
-import { Check, ChevronDown, Users, HandPlatter, ChefHat } from 'lucide-react'
+import {
+  Phone, Send, ArrowRight, Users, HandPlatter, ChefHat,
+  UtensilsCrossed, Wine, Flame, Soup, GlassWater, ConciergeBell, Sparkles,
+  type LucideIcon,
+} from 'lucide-react'
 import { company } from '../data/site'
+import { FloatField, IconCards, LightSelect, SuccessCheck } from '../components/FluidField'
 
 const perks = [
   { icon: Users, title: 'A Family Table', blurb: 'A close, family-run team that looks out for each other, shift after shift.' },
@@ -9,13 +14,25 @@ const perks = [
   { icon: HandPlatter, title: 'Honest Pay & Tips', blurb: 'Competitive pay, a steady downtown crowd, and a room people love to return to.' },
 ]
 
-const field =
-  'w-full border border-line bg-paper px-4 py-3.5 text-body-md text-ink placeholder:text-ink-faint focus:border-oxblood focus-visible:outline-none focus:ring-1 focus:ring-oxblood/30'
+// Position icon cards. `value` stays identical to the old <select> so Netlify
+// receives the same `position` field.
+const POSITION_OPTIONS: { value: string; label: string; icon: LucideIcon }[] = [
+  { value: 'Server / Waitstaff', label: 'Server', icon: UtensilsCrossed },
+  { value: 'Bartender', label: 'Bartender', icon: Wine },
+  { value: 'Line Cook', label: 'Line cook', icon: Flame },
+  { value: 'Prep Cook', label: 'Prep cook', icon: Soup },
+  { value: 'Dishwasher', label: 'Dishwasher', icon: GlassWater },
+  { value: 'Host', label: 'Host', icon: ConciergeBell },
+  { value: 'Anything available', label: 'Anything', icon: Sparkles },
+]
+
+const AVAILABILITY_OPTIONS = ['Full-time', 'Part-time', 'Either']
 
 export default function Employment() {
   const [sent, setSent] = useState(false)
   const [error, setError] = useState(false)
   const [firstName, setFirstName] = useState('')
+  const [position, setPosition] = useState('')
   const formCardRef = useRef<HTMLDivElement>(null)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -30,6 +47,7 @@ export default function Employment() {
       setFirstName(nameVal.trim().split(/\s+/)[0] || '')
       setSent(true)
       form.reset()
+      setPosition('')
       requestAnimationFrame(() =>
         formCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
       )
@@ -79,17 +97,24 @@ export default function Employment() {
             <h2 className="mt-4 font-display text-headline-md text-ink">Tell us about yourself</h2>
 
             {sent ? (
-              <div className="mt-8 flex flex-col items-center gap-4 border border-gold/50 bg-gold/8 px-6 py-12 text-center">
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-oxblood text-on-oxblood">
-                  <Check size={28} />
+              <div className="rise mt-8 flex flex-col items-center gap-4 border border-gold/50 bg-gold/8 px-6 py-12 text-center">
+                <span className="flex h-16 w-16 items-center justify-center">
+                  <SuccessCheck />
                 </span>
                 <p className="font-display text-headline-md text-ink">
-                  Thanks{firstName ? `, ${firstName}` : ''}!
+                  Thank You{firstName ? `, ${firstName}` : ''}!
                 </p>
-                <p className="text-body-md text-ink-soft">
+                <p className="max-w-md text-body-md text-ink-soft">
                   We&rsquo;ve got your application and we&rsquo;ll review it soon. If it looks like a fit,
-                  we&rsquo;ll reach out to set up a time to chat. Questions? Call us at {company.phone}.
+                  we&rsquo;ll reach out to set up a time to chat. Questions? Give us a call.
                 </p>
+                <a
+                  href={company.phoneHref}
+                  className="group relative mt-1 inline-flex items-center gap-2 overflow-hidden bg-oxblood px-7 py-3.5 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-on-oxblood transition-colors hover:bg-oxblood-2"
+                >
+                  <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-white/25 blur-md group-hover:[animation:sheen_0.9s_ease]" />
+                  <Phone size={15} className="text-gold-soft" /> {company.phone}
+                </a>
               </div>
             ) : (
               <form
@@ -99,62 +124,48 @@ export default function Employment() {
                 netlify-honeypot="bot-field"
                 encType="multipart/form-data"
                 onSubmit={onSubmit}
-                className="mt-7 space-y-4"
+                className="mt-7 space-y-5"
               >
                 <input type="hidden" name="form-name" value="application" />
+                {/* Mirrors the icon-card selection into the Netlify `position` field. */}
+                <input type="hidden" name="position" value={position} />
                 <p className="hidden">
                   <label>
                     Don’t fill this out: <input name="bot-field" />
                   </label>
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <label htmlFor="app-name" className="sr-only">Full name</label>
-                    <input id="app-name" className={field} type="text" name="name" placeholder="Full name" required />
-                  </div>
-                  <div>
-                    <label htmlFor="app-phone" className="sr-only">Phone</label>
-                    <input id="app-phone" className={field} type="tel" name="phone" placeholder="Phone" required />
-                  </div>
+                  <FloatField idPrefix="app" name="name" label="Full name" required />
+                  <FloatField idPrefix="app" name="phone" label="Phone" type="tel" required />
                 </div>
-                <label htmlFor="app-email" className="sr-only">Email</label>
-                <input id="app-email" className={field} type="email" name="email" placeholder="Email" required />
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="relative">
-                    <label htmlFor="app-position" className="sr-only">Position of interest</label>
-                    <select id="app-position" name="position" defaultValue="" required className={`${field} appearance-none pr-11`}>
-                      <option value="" disabled>Position of interest</option>
-                      <option>Server / Waitstaff</option>
-                      <option>Bartender</option>
-                      <option>Line Cook</option>
-                      <option>Prep Cook</option>
-                      <option>Dishwasher</option>
-                      <option>Host</option>
-                      <option>Anything available</option>
-                    </select>
-                    <ChevronDown size={18} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-faint" />
-                  </div>
-                  <div className="relative">
-                    <label htmlFor="app-availability" className="sr-only">Availability</label>
-                    <select id="app-availability" name="availability" defaultValue="" required className={`${field} appearance-none pr-11`}>
-                      <option value="" disabled>Availability</option>
-                      <option>Full-time</option>
-                      <option>Part-time</option>
-                      <option>Either</option>
-                    </select>
-                    <ChevronDown size={18} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink-faint" />
-                  </div>
-                </div>
-                <label htmlFor="app-experience" className="sr-only">Experience and availability</label>
-                <textarea
-                  id="app-experience"
-                  className={field}
+                <FloatField idPrefix="app" name="email" label="Email" type="email" required />
+
+                <IconCards
+                  legend="What are you interested in?"
+                  options={POSITION_OPTIONS}
+                  value={position}
+                  onChange={setPosition}
+                  smCols={4}
+                />
+
+                <LightSelect
+                  idPrefix="app"
+                  name="availability"
+                  label="Availability"
+                  options={AVAILABILITY_OPTIONS}
+                  placeholder="Select availability…"
+                  required
+                />
+
+                <FloatField
+                  idPrefix="app"
                   name="experience"
+                  label="Tell us a little about your experience and when you can start"
+                  textarea
                   rows={4}
-                  placeholder="Tell us a little about your experience and when you can start"
                 />
                 <div>
-                  <label htmlFor="resume" className="mb-2 block text-[12px] uppercase tracking-[0.14em] text-ink-faint">
+                  <label htmlFor="resume" className="mb-2 block font-sans text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-faint">
                     Resume (optional, PDF or Word)
                   </label>
                   <input
@@ -173,9 +184,11 @@ export default function Employment() {
                 )}
                 <button
                   type="submit"
-                  className="w-full bg-oxblood px-8 py-4 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-on-oxblood transition-colors hover:bg-oxblood-2"
+                  className="group relative flex w-full items-center justify-center gap-2.5 overflow-hidden bg-oxblood px-8 py-4 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-on-oxblood transition-colors hover:bg-oxblood-2"
                 >
-                  Submit Application
+                  <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-white/25 blur-md group-hover:[animation:sheen_0.9s_ease]" />
+                  <Send size={14} /> Submit Application
+                  <ArrowRight size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
               </form>
             )}
