@@ -4,6 +4,7 @@ import { Phone, CalendarHeart, Star, Quote } from 'lucide-react'
 import { company, aboutParagraphs, featurePillars, featuredShowcase, barHighlights, reviews } from '../data/site'
 import HeroSlideshow from '../components/HeroSlideshow'
 import Button from '../components/Button'
+import MagneticHover from '../components/MagneticHover'
 import SectionHeading from '../components/SectionHeading'
 import Divider from '../components/Divider'
 
@@ -33,12 +34,16 @@ export default function Home() {
             pub, in the heart of Main Street.
           </p>
           <div className="rise rise-3 mt-9 flex flex-wrap items-center justify-center gap-4">
-            <Button href="/menu" variant="cream">
-              View the Menu
-            </Button>
-            <Button href="/reservations" variant="ghost">
-              Reserve a Table
-            </Button>
+            <MagneticHover>
+              <Button href="/menu" variant="cream">
+                View the Menu
+              </Button>
+            </MagneticHover>
+            <MagneticHover>
+              <Button href="/reservations" variant="ghost">
+                Reserve a Table
+              </Button>
+            </MagneticHover>
           </div>
         </div>
       </section>
