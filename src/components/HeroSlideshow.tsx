@@ -4,6 +4,13 @@ import { useReducedMotion } from '../hooks/useReducedMotion'
 // Full-bleed hero that slowly cross-fades through a set of food images, each
 // with a Ken Burns drift. SSR-safe: the first image renders statically, then
 // JS advances the index. Under reduced-motion it holds on the first image.
+//
+// IMPORTANT: every image runs the same `kenburns` animation continuously, so
+// they stay in phase (same scale at any moment). If only the active image had
+// kenburns, the outgoing image's transform would snap back to scale(1) when
+// the class was removed, while the incoming image started fresh at scale(1.06)
+// — producing a visible "bounce" mid-crossfade. Same animation everywhere
+// keeps the crossfade pure-opacity, no scale shift.
 export default function HeroSlideshow({
   images,
   interval = 5500,
@@ -31,7 +38,7 @@ export default function HeroSlideshow({
           style={{ objectPosition: img.position ?? 'center' }}
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1600ms] ease-in-out ${
             idx === active ? 'opacity-100' : 'opacity-0'
-          } ${idx === active && !reduced ? 'kenburns' : ''}`}
+          } ${reduced ? '' : 'kenburns'}`}
         />
       ))}
       <div className="hero-scrim absolute inset-0" />
