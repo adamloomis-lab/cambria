@@ -27,9 +27,16 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
-      const id = requestAnimationFrame(() => setShown(true))
+      // Double rAF: guarantees the browser paints the initial (closed) state
+      // before flipping to shown, so the entrance transition actually runs
+      // instead of latching at the start values.
+      let inner = 0
+      const outer = requestAnimationFrame(() => {
+        inner = requestAnimationFrame(() => setShown(true))
+      })
       return () => {
-        cancelAnimationFrame(id)
+        cancelAnimationFrame(outer)
+        cancelAnimationFrame(inner)
         document.body.style.overflow = ''
       }
     }
@@ -99,8 +106,8 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
                 key={l.href}
                 href={l.href}
                 onClick={onClose}
-                className={`group flex items-center justify-between border-b border-cream/10 py-4 font-display text-3xl text-cream/90 transition-all duration-500 hover:text-gold ${
-                  shown ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
+                className={`group flex items-center justify-between border-b border-cream/10 py-4 font-display text-3xl text-cream/90 transition-transform duration-500 motion-reduce:transition-none hover:text-gold ${
+                  shown ? 'translate-x-0' : 'translate-x-6'
                 }`}
                 style={{ transitionDelay: `${120 + i * 70}ms` }}
               >
@@ -114,8 +121,8 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
           </nav>
 
           <div
-            className={`mt-8 flex flex-col gap-3 transition-all duration-500 ${
-              shown ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+            className={`mt-8 flex flex-col gap-3 transition-transform duration-500 motion-reduce:transition-none ${
+              shown ? 'translate-y-0' : 'translate-y-4'
             }`}
             style={{ transitionDelay: `${120 + navLinks.length * 70 + 60}ms` }}
           >
