@@ -40,19 +40,19 @@ export const company = {
 // Mon closed; Tue–Thu 4–9; Fri–Sat 12–9; Sun 12–4.
 // ---------------------------------------------------------------------------
 export const hours = [
-  { day: 'Sunday', short: 'Sun', dow: 0, time: '12:00 pm – 4:00 pm' },
+  { day: 'Sunday', short: 'Sun', dow: 0, time: '12:00 pm - 4:00 pm' },
   { day: 'Monday', short: 'Mon', dow: 1, time: 'Closed' },
-  { day: 'Tuesday', short: 'Tue', dow: 2, time: '4:00 pm – 9:00 pm' },
-  { day: 'Wednesday', short: 'Wed', dow: 3, time: '4:00 pm – 9:00 pm' },
-  { day: 'Thursday', short: 'Thu', dow: 4, time: '4:00 pm – 9:00 pm' },
-  { day: 'Friday', short: 'Fri', dow: 5, time: '12:00 pm – 9:00 pm' },
-  { day: 'Saturday', short: 'Sat', dow: 6, time: '12:00 pm – 9:00 pm' },
+  { day: 'Tuesday', short: 'Tue', dow: 2, time: '4:00 pm - 9:00 pm' },
+  { day: 'Wednesday', short: 'Wed', dow: 3, time: '4:00 pm - 9:00 pm' },
+  { day: 'Thursday', short: 'Thu', dow: 4, time: '4:00 pm - 9:00 pm' },
+  { day: 'Friday', short: 'Fri', dow: 5, time: '12:00 pm - 9:00 pm' },
+  { day: 'Saturday', short: 'Sat', dow: 6, time: '12:00 pm - 9:00 pm' },
 ]
 
 export const hoursCompact = [
-  { day: 'Tue – Thu', time: '4:00 – 9:00 pm' },
-  { day: 'Fri – Sat', time: '12:00 – 9:00 pm' },
-  { day: 'Sunday', time: '12:00 – 4:00 pm' },
+  { day: 'Tue - Thu', time: '4:00 - 9:00 pm' },
+  { day: 'Fri - Sat', time: '12:00 - 9:00 pm' },
+  { day: 'Sunday', time: '12:00 - 4:00 pm' },
   { day: 'Monday', time: 'Closed' },
 ]
 
