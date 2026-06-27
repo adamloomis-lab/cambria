@@ -2,7 +2,6 @@ import type { CSSProperties } from 'react'
 import { Link } from 'wouter'
 import { Phone, CalendarHeart, Star, Quote } from 'lucide-react'
 import { company, aboutParagraphs, featurePillars, featuredDishes, barHighlights, reviews } from '../data/site'
-import Backdrop from '../components/Backdrop'
 import HeroSlideshow from '../components/HeroSlideshow'
 import Button from '../components/Button'
 import SectionHeading from '../components/SectionHeading'
@@ -182,21 +181,22 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---------- EVENTS TEASER ---------- */}
-      <section className="relative overflow-hidden">
-        <Backdrop src="/images/event-space.webp" kenburns={false} position="center 40%" />
-        <div className="container-x relative z-10 py-28 text-center md:py-32">
-          <p className="eyebrow on-dark mx-auto reveal">Private Events & Catering</p>
-          <h2 className="reveal mt-4 font-display text-headline-lg text-cream md:text-[44px]">
-            For the moments worth gathering
+      {/* ---------- EVENTS NOTE ---------- */}
+      <section className="bg-charcoal py-20 md:py-24">
+        <div className="container-x text-center">
+          <p className="eyebrow on-dark mx-auto reveal">Private Events</p>
+          <h2 className="reveal mt-4 font-display text-headline-lg text-cream md:text-[40px]">
+            Celebrate with us
           </h2>
-          <p className="reveal mx-auto mt-5 max-w-2xl text-body-lg text-cream-soft">
-            Rehearsal dinners, showers, business gatherings and celebrations, in our private dining room
-            or catered to your door.
+          <span className="gold-rule centered mx-auto mt-6 block w-[64px]" />
+          <p className="reveal mx-auto mt-7 max-w-2xl text-body-lg text-cream-soft">
+            Rehearsal dinners, showers, birthdays, business gatherings, celebrations of life
+            and holiday parties: we host private events right here at Cambria&rsquo;s. If you&rsquo;re
+            interested in hosting one with us, please get in touch.
           </p>
           <div className="reveal mt-8">
-            <Button href="/events" variant="cream">
-              Plan Your Event
+            <Button href="/contact" variant="cream">
+              Contact Us
             </Button>
           </div>
         </div>

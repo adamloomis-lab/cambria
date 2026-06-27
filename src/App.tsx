@@ -11,7 +11,6 @@ import { useParallax } from './hooks/useParallax'
 import Home from './pages/Home'
 import Menu from './pages/Menu'
 import About from './pages/About'
-import Events from './pages/Events'
 import Reservations from './pages/Reservations'
 import Contact from './pages/Contact'
 import Employment from './pages/Employment'
@@ -45,7 +44,6 @@ function Shell() {
           <Route path="/" component={Home} />
           <Route path="/menu" component={Menu} />
           <Route path="/about" component={About} />
-          <Route path="/events" component={Events} />
           <Route path="/reservations" component={Reservations} />
           <Route path="/contact" component={Contact} />
           <Route path="/employment" component={Employment} />

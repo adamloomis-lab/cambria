@@ -7,7 +7,6 @@ const explore = [
   { label: 'Home', href: '/' },
   { label: 'Menu', href: '/menu' },
   { label: 'Our Story', href: '/about' },
-  { label: 'Events & Catering', href: '/events' },
   { label: 'Reservations', href: '/reservations' },
   { label: 'Contact & Directions', href: '/contact' },
   { label: 'Employment', href: '/employment' },

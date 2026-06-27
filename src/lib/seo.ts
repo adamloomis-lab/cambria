@@ -146,8 +146,8 @@ const FAQS = [
     a: 'Yes. For reservations and large parties, call (330) 331-5282 or send a reservation request through our website and we’ll confirm your table.',
   },
   {
-    q: 'Do you host private events and offer catering?',
-    a: 'We do. Our private dining room hosts rehearsal dinners, showers, business gatherings and celebrations, and we cater off-site across the Wadsworth area. Call (330) 331-5282 to plan your event.',
+    q: 'Do you host private events?',
+    a: 'We do. We host rehearsal dinners, showers, birthdays, business gatherings and celebrations of life right here at Cambria’s. If you’re interested in hosting a private event, please contact us at (330) 331-5282.',
   },
   {
     q: 'Do you have vegetarian and gluten-free options?',
@@ -241,36 +241,13 @@ export function getPageMeta(rawPath: string): PageMeta {
           ]),
         ],
       }
-    case '/events':
-      return {
-        title: "Private Events & Catering | Cambria's Bistro, Wadsworth OH",
-        description:
-          'Host your celebration at Cambria’s. A private dining room for rehearsal dinners, showers and parties, plus off-site catering. Call (330) 331-5282.',
-        canonical: pageUrl('/events'),
-        ogImage: abs('/images/event-space.webp'),
-        jsonLd: [
-          restaurantSchema(),
-          {
-            '@context': 'https://schema.org',
-            '@type': 'Service',
-            serviceType: 'Private Events & Catering',
-            provider: { '@id': `${SITE_URL}/#restaurant` },
-            areaServed: { '@type': 'AdministrativeArea', name: 'Medina County, OH' },
-            url: pageUrl('/events'),
-          },
-          breadcrumb([
-            { name: 'Home', path: '/' },
-            { name: 'Events & Catering', path: '/events' },
-          ]),
-        ],
-      }
     case '/reservations':
       return {
         title: "Reservations | Cambria's Bistro, Wadsworth OH",
         description:
           'Reserve your table at Cambria’s Bistro in downtown Wadsworth. Send a reservation request online or call (330) 331-5282. We’ll confirm your table.',
         canonical: pageUrl('/reservations'),
-        ogImage: abs('/images/interior-engaged.webp'),
+        ogImage: abs('/images/interior-bar.webp'),
         jsonLd: [
           restaurantSchema(),
           breadcrumb([
@@ -357,7 +334,6 @@ export const ALL_ROUTES: string[] = [
   '/',
   '/menu',
   '/about',
-  '/events',
   '/reservations',
   '/contact',
   '/employment',

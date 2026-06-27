@@ -66,7 +66,7 @@ export default function Reservations() {
     <>
       {/* ---------- HERO ---------- */}
       <section className="relative flex min-h-[52vh] items-end overflow-hidden">
-        <Backdrop src="/images/interior-engaged.webp" position="center 60%" />
+        <Backdrop src="/images/interior-bar.webp" position="center 55%" />
         <div className="container-x relative z-10 pb-14 pt-36 text-center">
           <p className="eyebrow on-dark mx-auto">Reserve Your Table</p>
           <h1 className="mt-4 font-display text-display-lg-mobile text-cream md:text-display-lg">
@@ -206,10 +206,11 @@ export default function Reservations() {
               </span>
               <h3 className="mt-4 font-display text-headline-sm text-ink">Large parties & events</h3>
               <p className="mt-2 text-body-md text-ink-soft">
-                Planning something bigger? Our private dining room and catering team have you covered.
+                Hosting a rehearsal dinner, shower, birthday or business gathering? We host private
+                events in the restaurant. Get in touch and we&rsquo;ll plan it together.
               </p>
-              <a href="/events" className="mt-3 inline-block text-[13px] font-semibold uppercase tracking-[0.16em] text-gold-deep hover:text-oxblood">
-                Events & Catering →
+              <a href="/contact" className="mt-3 inline-block text-[13px] font-semibold uppercase tracking-[0.16em] text-gold-deep hover:text-oxblood">
+                Contact Us →
               </a>
             </div>
 

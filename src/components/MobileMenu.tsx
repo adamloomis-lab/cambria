@@ -13,7 +13,6 @@ const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Menu', href: '/menu' },
   { label: 'Our Story', href: '/about' },
-  { label: 'Events', href: '/events' },
   { label: 'Reservations', href: '/reservations' },
   { label: 'Contact', href: '/contact' },
 ]

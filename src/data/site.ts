@@ -474,25 +474,17 @@ export const barHighlights = [
   },
 ]
 
-// Private events / catering.
-export const eventInfo = {
-  blurb:
-    'Our private dining room sits beneath exposed brick and warm light, ready for rehearsal dinners, showers, business gatherings, birthdays and holiday parties. We tailor menus family-style or plated, and we can cater off-site too.',
-  capabilities: [
-    'Private dining room for seated dinners and standing receptions',
-    'Family-style, plated, or buffet menus built around your event',
-    'Rehearsal dinners, showers, birthdays and celebrations of life',
-    'Corporate lunches, meetings and holiday parties',
-    'Off-site catering across the Wadsworth area',
-    'Full bar service and curated wine pairings',
-  ],
-  gallery: [
-    { src: '/images/event-space.webp', alt: 'Cambria’s private dining room with exposed brick and white linens' },
-    { src: '/images/event-table-long.webp', alt: 'A long banquet table set for a private gathering' },
-    { src: '/images/interior-engaged.webp', alt: 'The dining room dressed for a celebration' },
-    { src: '/images/interior-bar.webp', alt: 'Guests dining in Cambria’s warm bar and dining room' },
-  ],
-}
+// Private events list (hosted in the main dining room — no dedicated private
+// room). Surfaced as a simple "we host events too" band on Home; the actual
+// inquiry happens through the Contact page.
+export const privateEventTypes = [
+  'Rehearsal dinners',
+  'Showers',
+  'Birthdays',
+  'Business gatherings',
+  'Celebrations of life',
+  'Holiday parties',
+]
 
 // ---------------------------------------------------------------------------
 // Reviews, real guest reviews supplied by the owner. Verbatim quotes & names.

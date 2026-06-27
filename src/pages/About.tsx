@@ -17,7 +17,7 @@ export default function About() {
     <>
       {/* ---------- HERO ---------- */}
       <section className="relative flex min-h-[56vh] items-end overflow-hidden">
-        <Backdrop src="/images/interior-engaged.webp" position="center 55%" />
+        <Backdrop src="/images/interior-bar.webp" position="center 55%" />
         <div className="container-x relative z-10 pb-14 pt-36 text-center">
           <p className="eyebrow on-dark mx-auto">Our Story</p>
           <h1 className="mt-4 font-display text-display-lg-mobile text-cream md:text-display-lg">
@@ -43,8 +43,8 @@ export default function About() {
           </div>
           <div className="reveal space-y-5">
             <img
-              src="/images/interior-bar.webp"
-              alt="Cambria's warm dining room and bar"
+              src="/images/wine-selection.webp"
+              alt="A selection of wines at Cambria's bar"
               loading="lazy"
               className="aspect-[4/3] w-full object-cover"
             />

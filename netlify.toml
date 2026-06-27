@@ -11,6 +11,19 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Old Events page was removed (no more private dining room); send any stale
+# links to Contact so they don't 404.
+[[redirects]]
+  from = "/events"
+  to = "/contact/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/events/*"
+  to = "/contact/"
+  status = 301
+  force = true
+
 # Prerendered per-route HTML is served directly (Netlify serves existing files
 # before applying this fallback). The fallback only catches client-side routes
 # that have no prerendered file.
