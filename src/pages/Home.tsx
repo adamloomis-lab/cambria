@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'wouter'
 import { Phone, CalendarHeart, Star, Quote } from 'lucide-react'
-import { company, aboutParagraphs, featurePillars, featuredDishes, barHighlights, reviews } from '../data/site'
+import { company, aboutParagraphs, featurePillars, featuredShowcase, barHighlights, reviews } from '../data/site'
 import HeroSlideshow from '../components/HeroSlideshow'
 import Button from '../components/Button'
 import SectionHeading from '../components/SectionHeading'
@@ -103,21 +103,16 @@ export default function Home() {
             title="An Exquisite Menu"
             intro="A handful of guest favorites, all made from scratch. Italian classics beside today's brightest flavors."
           />
-          <div className="reveal-group mt-14 grid gap-8 md:grid-cols-3">
-            {featuredDishes.map((d) => (
-              <article key={d.name} className="group">
-                <div className="overflow-hidden">
-                  <img
-                    src={d.img}
-                    alt={d.name}
-                    loading="lazy"
-                    className="aspect-[5/4] w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
-                <h3 className="mt-5 font-display text-headline-sm text-cream">{d.name}</h3>
-                <span className="gold-rule mt-3 block w-[40px]" />
-                <p className="mt-3 text-body-md text-cream-soft">{d.desc}</p>
-              </article>
+          <div className="reveal-group mt-14 grid gap-6 md:grid-cols-3">
+            {featuredShowcase.map((s) => (
+              <div key={s.src} className="group overflow-hidden">
+                <img
+                  src={s.src}
+                  alt={s.alt}
+                  loading="lazy"
+                  className="aspect-[5/4] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
             ))}
           </div>
           <div className="mt-12 text-center">

@@ -51,13 +51,13 @@ export default function About() {
             <div className="grid grid-cols-2 gap-5">
               <img
                 src="/images/caprese.webp"
-                alt="Caprese with cherry tomatoes, fresh mozzarella and basil"
+                alt="A dish from Cambria's kitchen"
                 loading="lazy"
                 className="aspect-square w-full object-cover"
               />
               <img
                 src="/images/spaghetti-pomodoro.webp"
-                alt="Spaghetti in a creamy tomato sauce"
+                alt="A dish from Cambria's kitchen"
                 loading="lazy"
                 className="aspect-square w-full object-cover"
               />

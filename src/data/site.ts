@@ -430,26 +430,12 @@ export const menuGroups: MenuGroup[] = [
   },
 ]
 
-// Featured dishes for the home page (each mapped to a confirmed photo).
-export const featuredDishes = [
-  {
-    name: 'Cheese Tortellini',
-    price: '$15.49',
-    desc: 'Pillowy cheese tortellini, your choice of house marinara or spinach alfredo.',
-    img: '/images/tortellini-vodka.webp',
-  },
-  {
-    name: "Pop's Stuffed Shells",
-    price: '$16.99',
-    desc: 'House ricotta and marinara under a blanket of melted mozzarella.',
-    img: '/images/stuffed-shells.webp',
-  },
-  {
-    name: 'Ravioli of the Week',
-    price: '$17.29',
-    desc: "A rotating, chef-driven ravioli. Ask your server what's filling the table this week.",
-    img: '/images/ravioli.webp',
-  },
+// Showcase food shots for the home "From the Kitchen" band. No specific dish
+// names — we don't claim what each plate is, we just let the food look good.
+export const featuredShowcase = [
+  { src: '/images/tortellini-vodka.webp', alt: 'A plated pasta from the Cambria’s kitchen' },
+  { src: '/images/stuffed-shells.webp', alt: 'A plated pasta from the Cambria’s kitchen' },
+  { src: '/images/ravioli.webp', alt: 'A plated pasta from the Cambria’s kitchen' },
 ]
 
 // Bar / beverage highlights for the home "Bar & Cellar" band.
