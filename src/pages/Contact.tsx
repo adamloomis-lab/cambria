@@ -21,7 +21,6 @@ const encode = (data: Record<string, string>) =>
 // Netlify receives the same `subject` field.
 const SUBJECT_OPTIONS: { value: string; label: string; icon: LucideIcon }[] = [
   { value: 'General Question', label: 'General question', icon: HelpCircle },
-  { value: 'Reservations', label: 'Reservations', icon: CalendarHeart },
   { value: 'Private Event', label: 'Private event', icon: Wine },
   { value: 'Catering', label: 'Catering', icon: UtensilsCrossed },
   { value: 'Feedback', label: 'Feedback', icon: MessageCircle },
@@ -190,6 +189,18 @@ export default function Contact() {
                     value={subject}
                     onChange={setSubject}
                   >
+                    {/* Cross-link to the reservation form so booking data is captured there, not in the contact message. */}
+                    <Link
+                      href="/reservations"
+                      aria-label="Reserve a table, opens the reservation form"
+                      className="group flex flex-col items-start gap-2 border border-dashed border-oxblood/40 bg-paper px-3.5 py-3.5 text-left font-sans text-ink transition-all duration-200 hover:border-solid hover:border-oxblood hover:bg-crema-soft active:scale-[0.98]"
+                    >
+                      <span className="flex w-full items-center justify-between">
+                        <CalendarHeart size={22} className="text-oxblood" strokeWidth={1.75} aria-hidden="true" />
+                        <ArrowUpRight size={16} className="text-ink-faint transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-oxblood" aria-hidden="true" />
+                      </span>
+                      <span className="text-[14px] font-medium leading-tight">Reserve a table</span>
+                    </Link>
                     {/* Cross-link to the job application instead of setting a subject. */}
                     <Link
                       href="/employment"
