@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import type { FormEvent } from 'react'
 import {
   MapPin, Phone, Clock, Facebook, Instagram, Send, ArrowRight,
-  HelpCircle, CalendarHeart, Sparkles, UtensilsCrossed, MessageCircle,
+  HelpCircle, CalendarHeart, Wine, UtensilsCrossed, MessageCircle,
   Briefcase, ArrowUpRight, type LucideIcon,
 } from 'lucide-react'
 import { Link } from 'wouter'
@@ -22,7 +22,7 @@ const encode = (data: Record<string, string>) =>
 const SUBJECT_OPTIONS: { value: string; label: string; icon: LucideIcon }[] = [
   { value: 'General Question', label: 'General question', icon: HelpCircle },
   { value: 'Reservations', label: 'Reservations', icon: CalendarHeart },
-  { value: 'Private Event', label: 'Private event', icon: Sparkles },
+  { value: 'Private Event', label: 'Private event', icon: Wine },
   { value: 'Catering', label: 'Catering', icon: UtensilsCrossed },
   { value: 'Feedback', label: 'Feedback', icon: MessageCircle },
 ]

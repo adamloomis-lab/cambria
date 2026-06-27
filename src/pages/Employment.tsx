@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import type { FormEvent } from 'react'
 import {
   Phone, Send, ArrowRight, Users, HandPlatter, ChefHat,
-  UtensilsCrossed, Wine, Flame, Soup, GlassWater, ConciergeBell, Sparkles,
+  UtensilsCrossed, Wine, Flame, Soup, GlassWater, ConciergeBell, Briefcase,
   type LucideIcon,
 } from 'lucide-react'
 import { company } from '../data/site'
@@ -23,7 +23,7 @@ const POSITION_OPTIONS: { value: string; label: string; icon: LucideIcon }[] = [
   { value: 'Prep Cook', label: 'Prep cook', icon: Soup },
   { value: 'Dishwasher', label: 'Dishwasher', icon: GlassWater },
   { value: 'Host', label: 'Host', icon: ConciergeBell },
-  { value: 'Anything available', label: 'Anything', icon: Sparkles },
+  { value: 'Anything available', label: 'Anything', icon: Briefcase },
 ]
 
 const AVAILABILITY_OPTIONS = ['Full-time', 'Part-time', 'Either']
