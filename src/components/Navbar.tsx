@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'wouter'
-import { Menu, X, Phone } from 'lucide-react'
+import { Menu, Phone } from 'lucide-react'
 import Logo from './Logo'
+import MobileMenu from './MobileMenu'
 import { company } from '../data/site'
 import { useScrolled } from '../hooks/useScrolled'
 
@@ -72,44 +73,16 @@ export default function Navbar() {
 
         <button
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen(true)}
           className={solid ? 'text-ink lg:hidden' : 'text-cream lg:hidden'}
-          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-label="Open menu"
           aria-expanded={open}
         >
-          {open ? <X size={28} /> : <Menu size={28} />}
+          <Menu size={28} />
         </button>
       </nav>
 
-      {open && (
-        <div className="border-t border-line bg-crema lg:hidden">
-          <div className="container-x flex flex-col gap-1 py-5">
-            {[{ label: 'Home', href: '/' }, ...links].map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="px-2 py-3 font-sans text-sm font-semibold uppercase tracking-[0.16em] text-ink-soft hover:bg-crema-soft hover:text-oxblood"
-              >
-                {l.label}
-              </Link>
-            ))}
-            <a
-              href={company.phoneHref}
-              className="mt-2 inline-flex items-center justify-center gap-2 border border-gold px-5 py-3 font-sans text-sm font-semibold uppercase tracking-[0.14em] text-ink"
-            >
-              <Phone size={17} className="text-gold-deep" /> {company.phone}
-            </a>
-            <Link
-              href="/reservations"
-              onClick={() => setOpen(false)}
-              className="inline-flex items-center justify-center bg-oxblood px-5 py-3 font-sans text-sm font-semibold uppercase tracking-[0.14em] text-on-oxblood"
-            >
-              Reserve a Table
-            </Link>
-          </div>
-        </div>
-      )}
+      <MobileMenu open={open} onClose={() => setOpen(false)} />
     </header>
   )
 }
