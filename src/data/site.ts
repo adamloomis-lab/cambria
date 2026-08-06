@@ -576,6 +576,12 @@ export function isDateInClosure(dateIso: string): Closure | null {
   return null
 }
 
+// Public helper — the day the restaurant reopens (closure end + 1 day),
+// formatted like "Monday, August 17". Handy for modal / banner copy.
+export function reopenDate(closure: Closure): string {
+  return formatClosureDate(shiftDays(closure.end, 1))
+}
+
 function shiftDays(iso: string, days: number): string {
   const [y, m, d] = iso.split('-').map(Number)
   const dt = new Date(y, m - 1, d + days)
