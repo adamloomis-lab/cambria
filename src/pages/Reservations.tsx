@@ -1,11 +1,11 @@
-import { useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import type { FormEvent } from 'react'
 import {
-  Phone, Clock, Users, Send, ArrowRight,
+  Phone, Clock, Users, Send, ArrowRight, CalendarX,
   Cake, Heart, Wine, PartyPopper, UtensilsCrossed,
   type LucideIcon,
 } from 'lucide-react'
-import { company } from '../data/site'
+import { company, activeClosure, isDateInClosure, formatClosureDate, type Closure } from '../data/site'
 import Backdrop from '../components/Backdrop'
 import HoursList from '../components/HoursList'
 import { FloatField, IconCards, LightSelect, SuccessCheck } from '../components/FluidField'
@@ -36,11 +36,26 @@ export default function Reservations() {
   const [error, setError] = useState(false)
   const [firstName, setFirstName] = useState('')
   const [occasion, setOccasion] = useState('')
+  const [dateValue, setDateValue] = useState('')
+  const [upcomingClosure, setUpcomingClosure] = useState<Closure | null>(null)
   const formCardRef = useRef<HTMLDivElement>(null)
+
+  // Compute the currently-active or upcoming closure client-side so today's
+  // date is always fresh (no build-time freeze from SSR).
+  useEffect(() => {
+    setUpcomingClosure(activeClosure())
+  }, [])
+
+  // Live check: does the picked date fall inside a closure?
+  const dateBlockedBy = isDateInClosure(dateValue)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError(false)
+    if (dateBlockedBy) {
+      // Belt & suspenders: don't submit if the date is inside a closure.
+      return
+    }
     const form = e.currentTarget
     const data = Object.fromEntries(new FormData(form) as never) as Record<string, string>
     try {
@@ -54,6 +69,7 @@ export default function Reservations() {
       setSent(true)
       form.reset()
       setOccasion('')
+      setDateValue('')
       requestAnimationFrame(() =>
         formCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
       )
@@ -87,6 +103,20 @@ export default function Reservations() {
             <div ref={formCardRef} className="scroll-mt-28 border border-line bg-paper p-8 md:p-10">
               <p className="eyebrow">Reservation Request</p>
               <h2 className="mt-4 font-display text-headline-md text-ink">Tell us the details</h2>
+
+              {upcomingClosure && !sent && (
+                <div className="mt-6 flex items-start gap-3 border border-oxblood/40 bg-oxblood/8 p-4 text-body-md">
+                  <CalendarX size={20} className="mt-0.5 shrink-0 text-oxblood" aria-hidden="true" />
+                  <p className="text-ink-soft">
+                    <span className="font-semibold text-oxblood">Please note:</span>{' '}
+                    We&rsquo;ll be closed{' '}
+                    <span className="font-semibold text-ink">
+                      {formatClosureDate(upcomingClosure.start)} – {formatClosureDate(upcomingClosure.end)}
+                    </span>{' '}
+                    for {upcomingClosure.reason}. Reservations for those dates aren&rsquo;t available.
+                  </p>
+                </div>
+              )}
 
               {sent ? (
                 <div className="rise mt-8 flex flex-col items-center gap-4 border border-gold/50 bg-gold/8 px-6 py-12 text-center">
@@ -134,7 +164,23 @@ export default function Reservations() {
                   <div className="grid gap-4 sm:grid-cols-3">
                     <div>
                       <label className={labelCls} htmlFor="r-date">Date</label>
-                      <input id="r-date" className={field} type="date" name="date" required />
+                      <input
+                        id="r-date"
+                        className={`${field} ${dateBlockedBy ? 'border-oxblood ring-1 ring-oxblood/40' : ''}`}
+                        type="date"
+                        name="date"
+                        value={dateValue}
+                        onChange={(e) => setDateValue(e.target.value)}
+                        aria-invalid={dateBlockedBy ? true : undefined}
+                        aria-describedby={dateBlockedBy ? 'r-date-error' : undefined}
+                        required
+                      />
+                      {dateBlockedBy && (
+                        <p id="r-date-error" className="mt-1.5 text-[13px] text-oxblood">
+                          Closed for {dateBlockedBy.reason}. Please pick a date outside{' '}
+                          {formatClosureDate(dateBlockedBy.start)} – {formatClosureDate(dateBlockedBy.end)}.
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label className={labelCls} htmlFor="r-time">Time</label>
@@ -171,7 +217,8 @@ export default function Reservations() {
                   )}
                   <button
                     type="submit"
-                    className="group relative flex w-full items-center justify-center gap-2.5 overflow-hidden bg-oxblood px-8 py-4 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-on-oxblood transition-colors hover:bg-oxblood-2"
+                    disabled={!!dateBlockedBy}
+                    className="group relative flex w-full items-center justify-center gap-2.5 overflow-hidden bg-oxblood px-8 py-4 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-on-oxblood transition-colors hover:bg-oxblood-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-oxblood"
                   >
                     <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-white/25 blur-md group-hover:[animation:sheen_0.9s_ease]" />
                     <Send size={14} /> Request Reservation

@@ -526,6 +526,63 @@ export const reviews = [
 ]
 
 // ---------------------------------------------------------------------------
+// Closures = date ranges the restaurant will be closed (staff vacation,
+// holidays, etc.). The site-wide banner shows starting `showFrom` (defaults to
+// two weeks before start) and hides after `end`. The reservation form blocks
+// submissions with a date inside any listed range and explains why inline.
+// ---------------------------------------------------------------------------
+export type Closure = {
+  start: string // ISO date YYYY-MM-DD, inclusive
+  end: string // ISO date YYYY-MM-DD, inclusive
+  reason: string // Short human phrase, appears in banner and inline notice.
+  showFrom?: string // ISO date the banner starts showing (default: 14 days before start)
+}
+
+export const closures: Closure[] = [
+  {
+    start: '2026-08-08',
+    end: '2026-08-16',
+    reason: 'staff vacation',
+    showFrom: '2026-07-20',
+  },
+]
+
+// Format an ISO date as "Friday, August 8" (no year).
+export function formatClosureDate(iso: string): string {
+  const [y, m, d] = iso.split('-').map(Number)
+  const dt = new Date(y, m - 1, d)
+  return dt.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+// Return the closure to display right now (either in-progress or upcoming and
+// past its `showFrom`), else null. Called client-side so today's date is fresh.
+export function activeClosure(today: Date = new Date()): Closure | null {
+  const iso = today.toISOString().slice(0, 10)
+  for (const c of closures) {
+    const showFrom = c.showFrom ?? shiftDays(c.start, -14)
+    if (iso >= showFrom && iso <= c.end) return c
+  }
+  return null
+}
+
+// True if `dateIso` falls inside any closure range, returning that closure.
+export function isDateInClosure(dateIso: string): Closure | null {
+  if (!dateIso) return null
+  for (const c of closures) if (dateIso >= c.start && dateIso <= c.end) return c
+  return null
+}
+
+function shiftDays(iso: string, days: number): string {
+  const [y, m, d] = iso.split('-').map(Number)
+  const dt = new Date(y, m - 1, d + days)
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`
+}
+
+// ---------------------------------------------------------------------------
 // Food photo gallery (owner-supplied). alt text doubles as on-site captions.
 // ---------------------------------------------------------------------------
 export const gallery = [

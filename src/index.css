@@ -280,6 +280,13 @@
   z-index: 1;
 }
 
+/* When the ClosureBanner is mounted it adds `has-banner` to <html> so the
+   fixed navbar shifts down by the banner's 36px height, and the mobile
+   floating action bar stays clear (banner is at the top only, not bottom). */
+html.has-banner header {
+  top: 36px;
+}
+
 /* Soft scrim so hero text/logo stays legible over imagery */
 .hero-scrim {
   background: linear-gradient(

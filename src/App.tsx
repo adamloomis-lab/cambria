@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Route, Switch, Router, useLocation } from 'wouter'
 import Seo from './components/Seo'
 import SmoothScroll from './components/SmoothScroll'
+import ClosureBanner from './components/ClosureBanner'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import MobileActionBar from './components/MobileActionBar'
@@ -32,6 +33,7 @@ function Shell() {
 
   return (
     <SmoothScroll>
+      <ClosureBanner />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:shadow-lg focus:text-gray-900"
