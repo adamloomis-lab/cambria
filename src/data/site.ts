@@ -576,10 +576,22 @@ export function isDateInClosure(dateIso: string): Closure | null {
   return null
 }
 
-// Public helper — the day the restaurant reopens (closure end + 1 day),
-// formatted like "Monday, August 17". Handy for modal / banner copy.
+// Public helper — the first day the restaurant is actually open again after
+// the closure ends. Walks forward from `end+1` and skips any weekday marked
+// "Closed" in the regular `hours` schedule (e.g. Cambria's is closed every
+// Monday, so a closure ending on a Sunday reopens Tuesday, not Monday).
+// Formatted like "Tuesday, August 18".
 export function reopenDate(closure: Closure): string {
-  return formatClosureDate(shiftDays(closure.end, 1))
+  let iso = shiftDays(closure.end, 1)
+  // Safety cap so a misconfigured hours array can't infinite-loop.
+  for (let i = 0; i < 14; i++) {
+    const [y, m, d] = iso.split('-').map(Number)
+    const dow = new Date(y, m - 1, d).getDay()
+    const day = hours.find((h) => h.dow === dow)
+    if (!day || day.time !== 'Closed') return formatClosureDate(iso)
+    iso = shiftDays(iso, 1)
+  }
+  return formatClosureDate(iso)
 }
 
 function shiftDays(iso: string, days: number): string {
