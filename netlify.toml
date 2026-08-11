@@ -38,6 +38,20 @@
   to = "/index.html"
   status = 200
 
+# Six-header security baseline (see feedback_security_headers_standard).
+# CSP tuned for Cambria's actual stack: self-hosted fonts + assets, the Contact
+# page Google Maps iframe, Netlify Forms POSTing to /, /api/reviews and
+# /accessibility-widget.js on-origin. Clarity hosts allowlisted proactively so
+# a future consent-gated add drops in without a CSP change.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "accelerometer=(), autoplay=(self), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://www.clarity.ms https://*.clarity.ms; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https:; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self' https://*.clarity.ms; frame-src 'self' https://www.google.com https://maps.google.com; form-action 'self'"
+
 [[headers]]
   for = "/assets/*"
   [headers.values]
