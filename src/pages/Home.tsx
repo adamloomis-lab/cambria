@@ -1,12 +1,13 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'wouter'
-import { Phone, CalendarHeart, Star, Quote } from 'lucide-react'
-import { company, aboutParagraphs, featurePillars, featuredShowcase, barHighlights, reviews } from '../data/site'
+import { Phone, CalendarHeart } from 'lucide-react'
+import { company, aboutParagraphs, featurePillars, featuredShowcase, barHighlights } from '../data/site'
 import HeroSlideshow from '../components/HeroSlideshow'
 import Button from '../components/Button'
 import MagneticHover from '../components/MagneticHover'
 import SectionHeading from '../components/SectionHeading'
 import Divider from '../components/Divider'
+import Reviews from '../components/Reviews'
 
 // Appetizing food shots that cross-fade behind the hero for gentle movement.
 const heroImages = [
@@ -156,30 +157,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---------- TESTIMONIALS ---------- */}
-      <section className="bg-crema-soft py-24 md:py-28">
-        <div className="container-x">
-          <SectionHeading
-            eyebrow="From Our Guests"
-            title="Wadsworth's table"
-            intro="A few words from the neighbors, regulars and first-timers who pull up a chair."
-          />
-          <div className="reveal-group mt-14 grid gap-6 md:grid-cols-3">
-            {reviews.slice(0, 6).map((r) => (
-              <figure key={r.name} className="relative border-t border-gold/60 bg-paper p-7">
-                <Quote size={22} className="text-gold" aria-hidden="true" />
-                <div className="mt-3 flex gap-0.5" aria-label="Five star review">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} size={14} className="fill-gold text-gold" aria-hidden="true" />
-                  ))}
-                </div>
-                <blockquote className="mt-4 text-body-md text-ink-soft">“{r.quote}”</blockquote>
-                <figcaption className="mt-5 font-display text-headline-sm text-ink">{r.name}</figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ---------- TESTIMONIALS (live from Google Places) ---------- */}
+      <Reviews />
 
       {/* ---------- EVENTS NOTE ---------- */}
       <section className="bg-charcoal py-20 md:py-24">

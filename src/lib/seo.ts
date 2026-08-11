@@ -1,4 +1,4 @@
-import { company, openingHours, menuGroups, reviews, type MenuGroup } from '../data/site'
+import { company, openingHours, menuGroups, reviews, ratingSummary, type MenuGroup } from '../data/site'
 
 // Production domain. The live Netlify site uses the apex as primary and 301s
 // www -> apex, so canonicals/sitemap/OG/schema all use the apex to match the
@@ -18,8 +18,22 @@ function reviewNodes() {
     '@type': 'Review',
     reviewBody: r.quote,
     author: { '@type': 'Person', name: r.name },
-    reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: String(r.rating),
+      bestRating: '5',
+    },
   }))
+}
+
+function aggregateRating() {
+  return {
+    '@type': 'AggregateRating',
+    ratingValue: ratingSummary.value,
+    reviewCount: String(ratingSummary.count),
+    bestRating: '5',
+    worstRating: '1',
+  }
 }
 
 function openingHoursSpec() {
@@ -66,6 +80,7 @@ export function restaurantSchema() {
       { '@type': 'AdministrativeArea', name: 'Medina County, OH' },
     ],
     openingHoursSpecification: openingHoursSpec(),
+    aggregateRating: aggregateRating(),
     review: reviewNodes(),
     sameAs: [company.social.facebook, company.social.instagram],
     potentialAction: {

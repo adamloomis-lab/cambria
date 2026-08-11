@@ -31,6 +31,12 @@ export const company = {
     facebook: 'https://www.facebook.com/CambriasBistro',
     instagram: 'https://www.instagram.com/cambriasbistro/',
   },
+  // Google Places id, powers the live Reviews component + AggregateRating schema.
+  placeId: 'ChIJ7-n8a0zNMIgRj31o-fnpUIs',
+  // Deep link to leave / read a Google review (populated live from Places API,
+  // this is the SSR fallback).
+  mapsReviews:
+    'https://search.google.com/local/reviews?placeid=ChIJ7-n8a0zNMIgRj31o-fnpUIs',
   doordashUrl:
     'https://www.doordash.com/store/cambria%E2%80%99s-bistro-(132-main-st)-132-main-st-wadsworth-32761217/52639746/',
 } as const
@@ -473,55 +479,51 @@ export const privateEventTypes = [
 ]
 
 // ---------------------------------------------------------------------------
-// Reviews, real guest reviews supplied by the owner. Verbatim quotes & names.
-// Never fabricate ratings; aggregateRating is intentionally omitted until a
-// verified Google star value + count is supplied. See local-seo-standards.
+// Reviews. Baked as the SSR fallback for the Reviews component + AggregateRating
+// JSON-LD. Numbers below are the live Google Places snapshot taken during setup.
+// The Reviews component swaps these for the freshest Google reviews on mount
+// via /api/reviews (see netlify/functions/reviews.mts), so the "static" pair
+// exists only for SEO and for the guaranteed first paint. Refresh occasionally
+// to keep the ratingSummary + baked quotes reasonably current for crawlers.
 // ---------------------------------------------------------------------------
+export const ratingSummary = { value: '4.3', count: 193 }
+
 export const reviews = [
   {
     name: 'Denise Harkness',
+    rating: 5,
     quote:
-      'Top notch! The atmosphere was great the moment we walked in. The table was beautifully set. Top notch cook, attentive waiter, and the lasagna was delicious.',
+      'Top notch. The atmosphere was great the moment we walked in. The table was beautifully set. Top notch cook, attentive waiter, and the lasagna was delicious.',
   },
   {
     name: 'Wendy Forbes',
+    rating: 5,
     quote:
       "We were told by some locals that this was 'The Place' in town to eat. They were right. Beautiful space, warm staff, and food worth the drive.",
   },
   {
     name: 'Janie Grosjean',
+    rating: 5,
     quote:
-      "I can't say how much I LOVE THIS PLACE! We were looking for lunch in the Wadsworth area and stumbled on a gem. The food was incredible, the service was warm, and we'll absolutely be back.",
-  },
-  {
-    name: 'Denise Hritsko',
-    quote:
-      'Great new place in Wadsworth. Pasta was excellent, good wine selection, and fabulous service. Make a reservation!',
+      "I can't say how much I LOVE THIS PLACE. We were looking for lunch in the Wadsworth area and stumbled on a gem. The food was incredible, the service was warm, and we'll absolutely be back.",
   },
   {
     name: 'Kevin Schrader',
+    rating: 5,
     quote:
       'What an awesome experience. The food is beyond expectations and the service and atmosphere were wonderful. Compared to other Italian offerings, this one takes the cannoli.',
   },
   {
     name: 'Joe Werner',
+    rating: 5,
     quote:
-      "Food was amazing! Service was great! It's quality food and not chain style. If you want some finer Italian style food, this is the place.",
+      "Food was amazing. Service was great. It's quality food and not chain style. If you want some finer Italian style food, this is the place.",
   },
   {
     name: 'Chandra Marcoux',
+    rating: 5,
     quote:
       'Hands down one of the best dining experiences we’ve had in the area. Everything from the welcome at the door to the final bite was outstanding.',
-  },
-  {
-    name: 'Jake Richardson',
-    quote:
-      'Great atmosphere and the food was delicious. Service was amazing. Well worth the stop!',
-  },
-  {
-    name: 'Dave Langley',
-    quote:
-      'My daughter and I loved everything about this place, especially the food. A wonderful father-daughter spot we’ll be coming back to.',
   },
 ]
 

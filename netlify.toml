@@ -11,6 +11,12 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# Friendly path for the live Google reviews function (see Reviews.tsx).
+[[redirects]]
+  from = "/api/reviews"
+  to = "/.netlify/functions/reviews"
+  status = 200
+
 # Old Events page was removed (no more private dining room); send any stale
 # links to Contact so they don't 404.
 [[redirects]]
