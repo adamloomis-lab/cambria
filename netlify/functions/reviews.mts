@@ -12,10 +12,19 @@ import { rateLimited, clientIp } from './_ratelimit.mts'
 
 const KEY = process.env.GOOGLE_PLACES_API_KEY
 
-function json(b: unknown, s = 200): Response {
+// Successful lookups are cached at the Netlify CDN (durable) for 30 days, so
+// Google bills roughly one fetch per month per place instead of one per visit.
+// Errors and rate-limit responses stay uncached.
+const CDN_CACHE = {
+  'cache-control': 'public, max-age=86400',
+  'netlify-cdn-cache-control': 'public, durable, s-maxage=2592000, stale-while-revalidate=86400',
+  'netlify-vary': 'query=id|q',
+}
+
+function json(b: unknown, s = 200, cache = false): Response {
   return new Response(JSON.stringify(b), {
     status: s,
-    headers: { 'content-type': 'application/json', 'cache-control': 'public, max-age=3600' },
+    headers: { 'content-type': 'application/json', ...(cache ? CDN_CACHE : { 'cache-control': 'no-store' }) },
   })
 }
 
@@ -125,5 +134,5 @@ export default async (req: Request): Promise<Response> => {
     total: p.userRatingCount ?? null,
     mapsUri: p.googleMapsUri ?? '',
     reviews,
-  })
+  }, 200, true)
 }
