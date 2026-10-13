@@ -37,6 +37,9 @@ export const company = {
   // this is the SSR fallback).
   mapsReviews:
     'https://search.google.com/local/reviews?placeid=ChIJ7-n8a0zNMIgRj31o-fnpUIs',
+  // Cambria's Hub: the reservation form books through it (src/pages/Reservations.tsx).
+  // When the hub moves to hub.cambriasbistro.com, change it here and in the CSP in netlify.toml.
+  hubUrl: 'https://cambrias-hub.netlify.app',
   doordashUrl:
     'https://www.doordash.com/store/cambria%E2%80%99s-bistro-(132-main-st)-132-main-st-wadsworth-32761217/52639746/',
 } as const

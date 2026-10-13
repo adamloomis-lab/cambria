@@ -8,19 +8,18 @@ import {
 import { company, activeClosure, isDateInClosure, formatClosureDate, type Closure } from '../data/site'
 import Backdrop from '../components/Backdrop'
 import HoursList from '../components/HoursList'
-import { FloatField, IconCards, LightSelect, SuccessCheck } from '../components/FluidField'
+import { FloatField, IconCards, SuccessCheck } from '../components/FluidField'
 
-const encode = (data: Record<string, string>) =>
-  Object.keys(data)
-    .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(data[k])}`)
-    .join('&')
+// The reservation form books through Cambria's Hub (company.hubUrl). The
+// hub says which times the room can really seat for the party size and
+// date, so only those are offered, and the booking lands in the hub's book
+// with the guest emailed and the team notified. Same-day tables still have
+// to clear the hub's notice window; anything it will not take says why.
 
 const field =
   'w-full border border-line bg-paper px-4 py-3.5 text-body-md text-ink placeholder:text-ink-faint focus:border-oxblood focus:outline-none focus:ring-1 focus:ring-oxblood/30'
 const labelCls = 'mb-2 block font-sans text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-faint'
 
-// Occasion icon cards. Submitted `value` reads naturally for the kitchen and
-// is carried into the same Netlify `occasion` field the text input used.
 const OCCASION_OPTIONS: { value: string; label: string; icon: LucideIcon }[] = [
   { value: 'Birthday', label: 'Birthday', icon: Cake },
   { value: 'Anniversary', label: 'Anniversary', icon: Heart },
@@ -29,54 +28,121 @@ const OCCASION_OPTIONS: { value: string; label: string; icon: LucideIcon }[] = [
   { value: 'Just Dinner', label: 'Just dinner', icon: UtensilsCrossed },
 ]
 
-const PARTY_OPTIONS = ['1', '2', '3', '4', '5', '6', '7', '8+']
+const MAX_PARTY = 8
+const PARTY_OPTIONS = Array.from({ length: MAX_PARTY }, (_, i) => i + 1)
+
+type Slot = { time: string; open: boolean }
+
+// "18:30" -> "6:30 PM"
+function clockTime(hhmm: string): string {
+  const [h, m] = hhmm.split(':').map(Number)
+  const ampm = h >= 12 ? 'PM' : 'AM'
+  const hr = h % 12 || 12
+  return m === 0 ? `${hr} ${ampm}` : `${hr}:${String(m).padStart(2, '0')} ${ampm}`
+}
+
+function todayIso(): string {
+  const d = new Date()
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
 
 export default function Reservations() {
-  const [sent, setSent] = useState(false)
-  const [error, setError] = useState(false)
+  const [sent, setSent] = useState<{ status: string; manage: string } | null>(null)
+  const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
   const [firstName, setFirstName] = useState('')
   const [occasion, setOccasion] = useState('')
   const [dateValue, setDateValue] = useState('')
+  const [party, setParty] = useState(2)
+  const [time, setTime] = useState('')
+  const [slots, setSlots] = useState<Slot[] | null>(null)
+  const [slotNote, setSlotNote] = useState('')
   const [upcomingClosure, setUpcomingClosure] = useState<Closure | null>(null)
   const formCardRef = useRef<HTMLDivElement>(null)
 
-  // Compute the currently-active or upcoming closure client-side so today's
-  // date is always fresh (no build-time freeze from SSR).
   useEffect(() => {
     setUpcomingClosure(activeClosure())
+    setDateValue(todayIso())
   }, [])
 
-  // Live check: does the picked date fall inside a closure?
   const dateBlockedBy = isDateInClosure(dateValue)
+
+  // Ask the hub which times are open for this date and party.
+  useEffect(() => {
+    if (!dateValue || dateBlockedBy) {
+      setSlots(null)
+      return
+    }
+    let stale = false
+    setTime('')
+    setSlots(null)
+    setSlotNote('')
+    fetch(`${company.hubUrl}/api/availability?date=${dateValue}&party=${party}`)
+      .then((r) => r.json())
+      .then((j: { slots?: Slot[]; error?: string }) => {
+        if (stale) return
+        setSlots(j.slots ?? [])
+        if (j.error) setSlotNote(j.error)
+      })
+      .catch(() => {
+        if (stale) return
+        setSlots([])
+        setSlotNote(`We could not check availability just now. Please call ${company.eventsPhone}.`)
+      })
+    return () => {
+      stale = true
+    }
+  }, [dateValue, party, dateBlockedBy])
+
+  const openSlots = (slots ?? []).filter((s) => s.open)
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setError(false)
-    if (dateBlockedBy) {
-      // Belt & suspenders: don't submit if the date is inside a closure.
+    setError('')
+    if (dateBlockedBy) return
+    if (!time) {
+      setError('Pick a time.')
       return
     }
     const form = e.currentTarget
     const data = Object.fromEntries(new FormData(form) as never) as Record<string, string>
+    setBusy(true)
     try {
-      const res = await fetch('/', {
+      const res = await fetch(`${company.hubUrl}/api/reserve`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encode({ 'form-name': 'reservation', ...data }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name, phone: data.phone, email: data.email,
+          date: dateValue, time, party, occasion, notes: data.notes ?? '',
+          website: data['bot-field'] ?? '',
+        }),
       })
-      if (!res.ok) throw new Error()
+      const j = (await res.json().catch(() => ({}))) as { error?: string; status?: string; manage_url?: string; taken?: boolean }
+      setBusy(false)
+      if (!res.ok) {
+        setError(j.error ?? `Something went wrong sending your request. Please try again, or call ${company.eventsPhone}.`)
+        // That time was just taken: ask the hub again so the list is honest.
+        if (j.taken) {
+          setTime('')
+          const again = await fetch(`${company.hubUrl}/api/availability?date=${dateValue}&party=${party}`).then((r) => r.json()).catch(() => null)
+          if (again?.slots) setSlots(again.slots)
+        }
+        return
+      }
       setFirstName((data.name || '').trim().split(/\s+/)[0] || '')
-      setSent(true)
+      setSent({ status: j.status ?? 'requested', manage: j.manage_url ?? '' })
       form.reset()
       setOccasion('')
-      setDateValue('')
       requestAnimationFrame(() =>
         formCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }),
       )
     } catch {
-      setError(true)
+      setBusy(false)
+      setError(`Something went wrong sending your request. Please try again, or call ${company.eventsPhone}.`)
     }
   }
+
+  const confirmedNow = sent?.status === 'confirmed'
 
   return (
     <>
@@ -89,8 +155,8 @@ export default function Reservations() {
             Join us at Cambria&rsquo;s
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-body-lg text-cream-soft">
-            Send a reservation request and we&rsquo;ll confirm your table by phone or email. For same-day
-            tables or parties of eight or more, please call us directly.
+            Pick a day and a party size and we show you the times we can seat you. Our team confirms
+            every reservation by email. For parties of more than {MAX_PARTY}, please call us directly.
           </p>
         </div>
       </section>
@@ -124,12 +190,18 @@ export default function Reservations() {
                     <SuccessCheck />
                   </span>
                   <p className="font-display text-headline-md text-ink">
-                    Thank You{firstName ? `, ${firstName}` : ''}!
+                    {confirmedNow ? 'You' : 'Thank You'}{confirmedNow ? '’re all set' : ''}{firstName ? `, ${firstName}` : ''}!
                   </p>
                   <p className="max-w-md text-body-md text-ink-soft">
-                    We&rsquo;ll reach out to confirm your table. A reservation isn&rsquo;t final until
-                    we&rsquo;ve confirmed it, so if you don&rsquo;t hear back soon, please give us a call.
+                    {confirmedNow
+                      ? 'Your table is confirmed and a confirmation email is on its way.'
+                      : 'We have your request and an email is on its way. A reservation isn’t final until our team confirms it, and you’ll get a second email the moment we do. If you don’t hear back soon, please give us a call.'}
                   </p>
+                  {sent.manage && (
+                    <a href={sent.manage} className="text-[13px] font-semibold uppercase tracking-[0.16em] text-gold-deep hover:text-oxblood">
+                      Manage your reservation →
+                    </a>
+                  )}
                   <a
                     href={company.eventsPhoneHref}
                     className="group relative mt-1 inline-flex items-center gap-2 overflow-hidden bg-oxblood px-7 py-3.5 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-on-oxblood transition-colors hover:bg-oxblood-2"
@@ -139,29 +211,14 @@ export default function Reservations() {
                   </a>
                 </div>
               ) : (
-                <form
-                  name="reservation"
-                  method="POST"
-                  data-netlify="true"
-                  netlify-honeypot="bot-field"
-                  onSubmit={onSubmit}
-                  className="mt-7 space-y-5"
-                >
-                  <input type="hidden" name="form-name" value="reservation" />
-                  {/* Mirrors the icon-card selection into the Netlify `occasion` field. */}
-                  <input type="hidden" name="occasion" value={occasion} />
+                <form name="reservation" onSubmit={onSubmit} className="mt-7 space-y-5">
                   <p className="hidden">
                     <label>
                       Don’t fill this out: <input name="bot-field" />
                     </label>
                   </p>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <FloatField idPrefix="r" name="name" label="Name" required />
-                    <FloatField idPrefix="r" name="phone" label="Phone" type="tel" required />
-                  </div>
-                  <FloatField idPrefix="r" name="email" label="Email" type="email" required />
 
-                  <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                       <label className={labelCls} htmlFor="r-date">Date</label>
                       <input
@@ -169,6 +226,7 @@ export default function Reservations() {
                         className={`${field} ${dateBlockedBy ? 'border-oxblood ring-1 ring-oxblood/40' : ''}`}
                         type="date"
                         name="date"
+                        min={todayIso()}
                         value={dateValue}
                         onChange={(e) => setDateValue(e.target.value)}
                         aria-invalid={dateBlockedBy ? true : undefined}
@@ -183,18 +241,60 @@ export default function Reservations() {
                       )}
                     </div>
                     <div>
-                      <label className={labelCls} htmlFor="r-time">Time</label>
-                      <input id="r-time" className={field} type="time" name="time" required />
+                      <span className={labelCls}>Party size</span>
+                      <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Party size">
+                        {PARTY_OPTIONS.map((n) => (
+                          <button
+                            key={n}
+                            type="button"
+                            role="radio"
+                            aria-checked={party === n}
+                            onClick={() => setParty(n)}
+                            className={`h-11 min-w-11 border px-3 font-sans text-[14px] font-semibold transition-colors ${party === n ? 'border-oxblood bg-oxblood text-on-oxblood' : 'border-line bg-paper text-ink hover:border-oxblood'}`}
+                          >
+                            {n}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                    <LightSelect
-                      idPrefix="r"
-                      name="party"
-                      label="Party size"
-                      options={PARTY_OPTIONS}
-                      placeholder="Guests"
-                      required
-                    />
                   </div>
+
+                  <div>
+                    <span className={labelCls}>
+                      Time{slots && openSlots.length > 0 ? ` · ${openSlots.length} open` : ''}
+                    </span>
+                    {dateBlockedBy ? null : slots === null ? (
+                      <p className="text-body-md text-ink-faint">Checking the book…</p>
+                    ) : slots.length === 0 ? (
+                      <p className="text-body-md text-ink-soft">{slotNote || 'We are closed that day.'}</p>
+                    ) : openSlots.length === 0 ? (
+                      <p className="text-body-md text-ink-soft">
+                        Nothing is open for {party} that day. Try another day, or call {company.eventsPhone} and we&rsquo;ll do our best.
+                      </p>
+                    ) : (
+                      <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-6" role="radiogroup" aria-label="Time">
+                        {slots.map((s) => (
+                          <button
+                            key={s.time}
+                            type="button"
+                            role="radio"
+                            aria-checked={time === s.time}
+                            disabled={!s.open}
+                            onClick={() => setTime(s.time)}
+                            className={`h-11 border font-sans text-[13.5px] font-semibold transition-colors ${time === s.time ? 'border-oxblood bg-oxblood text-on-oxblood' : s.open ? 'border-line bg-paper text-ink hover:border-oxblood' : 'border-line/50 bg-crema text-ink-faint/50 line-through'}`}
+                          >
+                            {clockTime(s.time)}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <FloatField idPrefix="r" name="name" label="Name" required />
+                    <FloatField idPrefix="r" name="phone" label="Phone" type="tel" required />
+                  </div>
+                  <FloatField idPrefix="r" name="email" label="Email" type="email" required />
 
                   <IconCards
                     legend="Occasion (optional)"
@@ -211,17 +311,15 @@ export default function Reservations() {
                     rows={3}
                   />
                   {error && (
-                    <p className="text-body-md text-error">
-                      Something went wrong sending your request. Please try again, or call {company.eventsPhone}.
-                    </p>
+                    <p className="text-body-md text-error" role="alert">{error}</p>
                   )}
                   <button
                     type="submit"
-                    disabled={!!dateBlockedBy}
+                    disabled={!!dateBlockedBy || busy || !time}
                     className="group relative flex w-full items-center justify-center gap-2.5 overflow-hidden bg-oxblood px-8 py-4 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-on-oxblood transition-colors hover:bg-oxblood-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-oxblood"
                   >
                     <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-white/25 blur-md group-hover:[animation:sheen_0.9s_ease]" />
-                    <Send size={14} /> Request Reservation
+                    <Send size={14} /> {busy ? 'Sending' : 'Request Reservation'}
                     <ArrowRight size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
                   <p className="text-center text-[13px] text-ink-faint">
