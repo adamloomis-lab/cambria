@@ -1,30 +1,54 @@
 import type { CSSProperties } from 'react'
 import { Link } from 'wouter'
 import { Phone, CalendarHeart } from 'lucide-react'
-import { company, aboutParagraphs, featurePillars, featuredShowcase, barHighlights } from '../data/site'
+import { company, nyeDinner, aboutParagraphs, featurePillars, featuredShowcase, barHighlights } from '../data/site'
 import HeroSlideshow from '../components/HeroSlideshow'
 import Button from '../components/Button'
 import MagneticHover from '../components/MagneticHover'
 import SectionHeading from '../components/SectionHeading'
 import Divider from '../components/Divider'
 import Reviews from '../components/Reviews'
+import NyeFeature, { useNyeLive } from '../components/NyeFeature'
 
 // Appetizing food shots that cross-fade behind the hero for gentle movement.
 const heroImages = [
+  { src: '/images/gnocchi-spinach-parmesan.webp', position: 'center 50%' },
+  { src: '/images/ravioli-sundried-cream.webp', position: 'center 48%' },
   { src: '/images/spaghetti-pomodoro.webp', position: 'center 55%' },
   { src: '/images/tortellini-vodka.webp', position: 'center 55%' },
   { src: '/images/fettuccine-pomodoro.webp', position: 'center 50%' },
-  { src: '/images/caprese.webp', position: 'center 50%' },
   { src: '/images/stuffed-shells.webp', position: 'center 55%' },
 ]
 
+// Small hero link down to the New Year's Eve section. Rendered twice with
+// opposite breakpoints: above the headline on phones, under the buttons on
+// larger screens.
+function NyeHeroLink({ className }: { readonly className: string }) {
+  return (
+    <a
+      href="#new-years-eve"
+      className={`items-center justify-center gap-x-2.5 border border-gold/50 bg-charcoal/55 px-4 py-2.5 font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-cream backdrop-blur-sm transition-colors hover:border-gold hover:bg-charcoal/75 sm:gap-x-3 sm:px-5 sm:py-3 sm:text-[12px] sm:tracking-[0.16em] ${className}`}
+    >
+      <span className="text-gold-soft">{nyeDinner.title}</span>
+      <span aria-hidden="true" className="h-1 w-1 shrink-0 rounded-full bg-gold" />
+      <span>
+        Dec 31<span className="hidden sm:inline"> · {nyeDinner.hours}</span>
+      </span>
+      <span aria-hidden="true">↓</span>
+    </a>
+  )
+}
+
 export default function Home() {
+  const nyeLive = useNyeLive()
   return (
     <>
       {/* ---------- HERO ---------- */}
       <section className="relative flex min-h-[92vh] items-center overflow-hidden">
         <HeroSlideshow images={heroImages} />
         <div className="container-x relative z-10 w-full pt-24 text-center">
+          {/* Phones get the New Year's Eve link first, so it never sits under the action bar. */}
+          {nyeLive && <NyeHeroLink className="rise mb-6 inline-flex sm:hidden" />}
           <p className="eyebrow on-dark mx-auto rise">Downtown Wadsworth · Italian Bistro & Bar</p>
           <h1 className="rise rise-1 mx-auto mt-6 max-w-4xl font-display text-display-lg-mobile text-cream md:text-display-xl">
             Time-Honored Favorites,
@@ -46,8 +70,12 @@ export default function Home() {
               </Button>
             </MagneticHover>
           </div>
+          {nyeLive && <NyeHeroLink className="rise rise-4 mt-8 hidden sm:inline-flex" />}
         </div>
       </section>
+
+      {/* ---------- NEW YEAR'S EVE (dated; hides itself after Dec 31) ---------- */}
+      {nyeLive && <NyeFeature />}
 
       {/* ---------- ABOUT TEASER ---------- */}
       <section className="bg-crema py-24 md:py-28">
@@ -71,8 +99,8 @@ export default function Home() {
             <div className="elegant-img relative aspect-[4/5]">
               <div className="parallax absolute -inset-y-[8%] inset-x-0" style={{ ['--p-amt']: '36px' } as CSSProperties}>
                 <img
-                  src="/images/caprese-stack.webp"
-                  alt="A dish from Cambria's kitchen"
+                  src="/images/patio-cavatappi.webp"
+                  alt="A bowl of pasta on Cambria's patio, with downtown Wadsworth in the background"
                   loading="lazy"
                   className="h-full w-full object-cover"
                 />
@@ -117,6 +145,7 @@ export default function Home() {
                   alt={s.alt}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  style={{ objectPosition: s.pos }}
                 />
               </div>
             ))}

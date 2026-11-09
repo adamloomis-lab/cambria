@@ -441,10 +441,11 @@ export const menuGroups: MenuGroup[] = [
 
 // Showcase food shots for the home "From the Kitchen" band. No specific dish
 // names — we don't claim what each plate is, we just let the food look good.
-export const featuredShowcase = [
-  { src: '/images/salad-arugula-strawberry.webp', alt: 'A fresh dish from Cambria’s kitchen' },
-  { src: '/images/tortellini-vodka.webp', alt: 'A hand-made pasta from Cambria’s kitchen' },
-  { src: '/images/cake-strawberry.webp', alt: 'A house dessert from Cambria’s kitchen' },
+// `pos` is the CSS object-position for the 5:4 crop of a portrait photo.
+export const featuredShowcase: { src: string; alt: string; pos: string }[] = [
+  { src: '/images/salad-arugula-strawberry.webp', alt: 'A fresh dish from Cambria’s kitchen', pos: 'center' },
+  { src: '/images/patio-sliders.webp', alt: 'Sliders and fries on Cambria’s patio', pos: 'center 62%' },
+  { src: '/images/cake-strawberry.webp', alt: 'A house dessert from Cambria’s kitchen', pos: 'center' },
 ]
 
 // Bar / beverage highlights for the home "Bar & Cellar" band.
@@ -597,6 +598,34 @@ export function reopenDate(closure: Closure): string {
     iso = shiftDays(iso, 1)
   }
   return formatClosureDate(iso)
+}
+
+// ---------------------------------------------------------------------------
+// New Year's Eve dinner: the dated feature on the Home page (section right
+// under the hero, plus a small link inside the hero). It hides itself once
+// `date` has passed in Eastern time; delete this block and its use in Home.tsx
+// after the holiday. The hub already carries the 4 to 8 hours for that night.
+// ---------------------------------------------------------------------------
+export const nyeDinner = {
+  date: '2026-12-31',
+  title: 'New Year’s Eve Dinner',
+  hours: '4 PM – 8 PM',
+  intro:
+    'Ring in the new year at Cambria’s. Join us for special New Year’s Eve dinner options alongside our regular dining menu.',
+  details: [
+    { label: 'Hours', value: 'Open 4 PM – 8 PM' },
+    { label: 'Menu', value: 'Special New Year’s Eve dinner options, plus our regular dining menu' },
+    { label: 'Reservations', value: 'Required. Seating is limited, and early reservations are available' },
+    { label: 'Catering', value: 'Pre-order catering orders available' },
+  ],
+  flyer: '/images/nye-dinner-2026.webp',
+  flyerAlt:
+    'New Year’s Eve Dinner at Cambria’s Bistro flyer: open 4 PM to 8 PM, reservations required, limited seating',
+} as const
+
+// Today's date in Wadsworth (Eastern time) as YYYY-MM-DD, for dated features.
+export function easternToday(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(now)
 }
 
 function shiftDays(iso: string, days: number): string {

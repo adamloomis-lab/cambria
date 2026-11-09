@@ -62,7 +62,11 @@ export default function Reservations() {
 
   useEffect(() => {
     setUpcomingClosure(activeClosure())
-    setDateValue(todayIso())
+    // A link can preselect a date (e.g. /reservations?date=2026-12-31 from the
+    // New Year's Eve feature on Home). Past or malformed dates fall back to today.
+    const today = todayIso()
+    const wanted = new URLSearchParams(window.location.search).get('date') ?? ''
+    setDateValue(/^\d{4}-\d{2}-\d{2}$/.test(wanted) && wanted >= today ? wanted : today)
   }, [])
 
   const dateBlockedBy = isDateInClosure(dateValue)
