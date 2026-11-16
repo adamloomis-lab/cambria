@@ -190,20 +190,24 @@ export default function Reservations() {
 
               {sent ? (
                 <div className="rise mt-8 flex flex-col items-center gap-4 border border-gold/50 bg-gold/8 px-6 py-12 text-center">
+                  {/* A request gets a clock, not a check: guests were reading the
+                      check and the request email as a booking. */}
                   <span className="flex h-16 w-16 items-center justify-center">
-                    <SuccessCheck />
+                    {confirmedNow ? <SuccessCheck /> : <Clock size={44} strokeWidth={1.5} className="text-gold-deep" aria-hidden="true" />}
                   </span>
                   <p className="font-display text-headline-md text-ink">
-                    {confirmedNow ? 'You' : 'Thank You'}{confirmedNow ? '’re all set' : ''}{firstName ? `, ${firstName}` : ''}!
+                    {confirmedNow
+                      ? `You’re all set${firstName ? `, ${firstName}` : ''}!`
+                      : 'Request sent, not confirmed yet'}
                   </p>
                   <p className="max-w-md text-body-md text-ink-soft">
                     {confirmedNow
                       ? 'Your table is confirmed and a confirmation email is on its way.'
-                      : 'We have your request and an email is on its way. A reservation isn’t final until our team confirms it, and you’ll get a second email the moment we do. If you don’t hear back soon, please give us a call.'}
+                      : `Thank you${firstName ? `, ${firstName}` : ''}. Your table is not reserved yet. Our team reviews every request by hand, and your table is reserved only when you get a second email from us with “Confirmed” in the subject line. If you haven’t received it before your visit, please call us before coming in.`}
                   </p>
                   {sent.manage && (
                     <a href={sent.manage} className="text-[13px] font-semibold uppercase tracking-[0.16em] text-gold-deep hover:text-oxblood">
-                      Manage your reservation →
+                      {confirmedNow ? 'Manage your reservation' : 'View or change your request'} →
                     </a>
                   )}
                   <a
