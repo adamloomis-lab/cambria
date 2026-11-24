@@ -656,6 +656,51 @@ export const nyeDinner = {
     'New Year’s Eve Dinner at Cambria’s Bistro flyer: open 4 PM to 8 PM, reservations required, limited seating',
 } as const
 
+// ---------------------------------------------------------------------------
+// This week's features, from the owner's flyer (11/24 to 12/1). Shown on the
+// Home and Menu pages from `showFrom` and gone on `hideOn` (Eastern time), as
+// the owner asked: "make it go away on 12/1". For next week's flyer, replace
+// the dates and the items. Photos are cropped from the flyer.
+// ---------------------------------------------------------------------------
+export type WeeklyFeature = { name: string; price: string; desc?: string; img: string }
+
+export const weeklyFeatures: { runs: string; showFrom: string; hideOn: string; items: WeeklyFeature[] } = {
+  runs: 'November 24 to December 1',
+  showFrom: '2026-11-24',
+  hideOn: '2026-12-01',
+  items: [
+    {
+      name: 'Prosciutto Arugula Flatbread',
+      price: '14.29',
+      desc: 'Thin sliced prosciutto, baby arugula, balsamic glaze drizzle, fresh mozzarella, tomato sauce',
+      img: '/images/feature-prosciutto-flatbread.webp',
+    },
+    { name: 'French Onion Soup', price: '6.50', img: '/images/feature-french-onion-soup.webp' },
+    {
+      name: 'Eggplant Lasagna',
+      price: '16.99',
+      desc: 'Layered breaded eggplant, house ricotta, fresh mozzarella, house marinara, baked',
+      img: '/images/feature-eggplant-lasagna.webp',
+    },
+    {
+      name: 'Mushroom Parm Ravioli',
+      price: '17.29',
+      desc: 'Portobello mushroom stuffed ravioli with mushroom parm cream sauce',
+      img: '/images/feature-mushroom-ravioli.webp',
+    },
+    {
+      name: 'Pesto Balsamic Burrata',
+      price: '13.49',
+      desc: 'Fresh burrata, pesto, balsamic glaze, blistered tomatoes, grilled baguettes',
+      img: '/images/feature-pesto-burrata.webp',
+    },
+  ],
+}
+
+export function weeklyFeaturesLive(today: string = easternToday()): boolean {
+  return today >= weeklyFeatures.showFrom && today < weeklyFeatures.hideOn
+}
+
 // Today's date in Wadsworth (Eastern time) as YYYY-MM-DD, for dated features.
 export function easternToday(now: Date = new Date()): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(now)

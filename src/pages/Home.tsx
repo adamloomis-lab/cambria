@@ -10,6 +10,7 @@ import Divider from '../components/Divider'
 import Reviews from '../components/Reviews'
 import NyeFeature, { useNyeLive } from '../components/NyeFeature'
 import HolidayHours, { useHolidayHours } from '../components/HolidayHours'
+import WeeklyFeatures from '../components/WeeklyFeatures'
 
 // Appetizing food shots that cross-fade behind the hero for gentle movement.
 const heroImages = [
@@ -75,6 +76,9 @@ export default function Home() {
           {nyeLive && <NyeHeroLink className="rise rise-4 mt-8 hidden sm:inline-flex" />}
         </div>
       </section>
+
+      {/* ---------- THIS WEEK'S FEATURES (dated; gone on hideOn) ---------- */}
+      <WeeklyFeatures withMenuLink />
 
       {/* ---------- NEW YEAR'S EVE (dated; hides itself after Dec 31) ---------- */}
       {nyeLive && <NyeFeature />}

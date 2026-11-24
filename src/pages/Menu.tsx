@@ -1,6 +1,7 @@
 import { company, menuGroups, type MenuGroup } from '../data/site'
 import Button from '../components/Button'
 import Backdrop from '../components/Backdrop'
+import WeeklyFeatures from '../components/WeeklyFeatures'
 
 function Group({ group }: { readonly group: MenuGroup }) {
   return (
@@ -69,6 +70,9 @@ export default function Menu() {
           ))}
         </div>
       </nav>
+
+      {/* ---------- THIS WEEK'S FEATURES (dated) ---------- */}
+      <WeeklyFeatures />
 
       {/* ---------- MENU BODY ---------- */}
       <section className="bg-crema py-16 md:py-20">
