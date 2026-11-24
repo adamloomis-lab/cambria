@@ -658,8 +658,8 @@ export const nyeDinner = {
 
 // ---------------------------------------------------------------------------
 // This week's features, from the owner's flyer (11/24 to 12/1). Shown on the
-// Home and Menu pages from `showFrom` and gone on `hideOn` (Eastern time), as
-// the owner asked: "make it go away on 12/1". For next week's flyer, replace
+// Home and Menu pages from `showFrom` and gone on `hideOn` (Eastern time).
+// Adam asked to keep them up through the end of 12/1, the flyer's last day. For next week's flyer, replace
 // the dates and the items. Photos are cropped from the flyer.
 // ---------------------------------------------------------------------------
 export type WeeklyFeature = { name: string; price: string; desc?: string; img: string }
@@ -667,7 +667,7 @@ export type WeeklyFeature = { name: string; price: string; desc?: string; img: s
 export const weeklyFeatures: { runs: string; showFrom: string; hideOn: string; items: WeeklyFeature[] } = {
   runs: 'November 24 to December 1',
   showFrom: '2026-11-24',
-  hideOn: '2026-12-01',
+  hideOn: '2026-12-02',
   items: [
     {
       name: 'Prosciutto Arugula Flatbread',
