@@ -544,14 +544,47 @@ export type Closure = {
   showFrom?: string // ISO date the banner starts showing (default: 14 days before start)
 }
 
+// Keep in chronological order: the banner shows the first one in range.
+// 2026 holidays come from the owner's Holiday Hours flyer (see holidayHours).
 export const closures: Closure[] = [
-  {
-    start: '2026-08-08',
-    end: '2026-08-16',
-    reason: 'staff vacation',
-    showFrom: '2026-07-20',
-  },
+  { start: '2026-11-26', end: '2026-11-27', reason: 'Thanksgiving' },
+  { start: '2026-12-11', end: '2026-12-11', reason: 'a private party', showFrom: '2026-12-04' },
+  { start: '2026-12-25', end: '2026-12-27', reason: 'Christmas', showFrom: '2026-12-12' },
+  { start: '2027-01-01', end: '2027-01-01', reason: 'New Year’s Day', showFrom: '2026-12-28' },
 ]
+
+// "Friday, December 11" for one day, "Friday, December 25 through Sunday,
+// December 27" for a range. Used by the banner, the popup and the reservation form.
+export function closureRange(c: Closure): string {
+  return c.start === c.end
+    ? formatClosureDate(c.start)
+    : `${formatClosureDate(c.start)} through ${formatClosureDate(c.end)}`
+}
+
+// ---------------------------------------------------------------------------
+// Holiday hours, straight from the owner's 2026 flyer. Each line disappears
+// the day after its date (Eastern time), and the whole block hides once all
+// have passed. Closed days are also in `closures` above; Cambria's Hub holds
+// the same dates so online booking matches.
+// ---------------------------------------------------------------------------
+export type HolidayHour = { date: string; label: string; time: string; note?: string }
+
+export const holidayHours: HolidayHour[] = [
+  { date: '2026-11-26', label: 'Thanksgiving', time: 'Closed' },
+  { date: '2026-11-27', label: 'Friday, Nov 27', time: 'Closed' },
+  { date: '2026-11-28', label: 'Saturday, Nov 28', time: '12:00 to 9:00 pm' },
+  { date: '2026-12-11', label: 'Friday, Dec 11', time: 'Closed', note: 'Private party' },
+  { date: '2026-12-24', label: 'Christmas Eve', time: '4:00 to 8:00 pm' },
+  { date: '2026-12-25', label: 'Christmas Day', time: 'Closed' },
+  { date: '2026-12-26', label: 'Saturday, Dec 26', time: 'Closed' },
+  { date: '2026-12-27', label: 'Sunday, Dec 27', time: 'Closed' },
+  { date: '2026-12-31', label: 'New Year’s Eve', time: '4:00 to 8:00 pm' },
+  { date: '2027-01-01', label: 'New Year’s Day', time: 'Closed' },
+]
+
+export function upcomingHolidayHours(today: string = easternToday()): HolidayHour[] {
+  return holidayHours.filter((h) => h.date >= today)
+}
 
 // Format an ISO date as "Friday, August 8" (no year).
 export function formatClosureDate(iso: string): string {
@@ -567,7 +600,7 @@ export function formatClosureDate(iso: string): string {
 // Return the closure to display right now (either in-progress or upcoming and
 // past its `showFrom`), else null. Called client-side so today's date is fresh.
 export function activeClosure(today: Date = new Date()): Closure | null {
-  const iso = today.toISOString().slice(0, 10)
+  const iso = easternToday(today)
   for (const c of closures) {
     const showFrom = c.showFrom ?? shiftDays(c.start, -14)
     if (iso >= showFrom && iso <= c.end) return c

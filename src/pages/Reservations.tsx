@@ -5,9 +5,10 @@ import {
   Cake, Heart, Wine, PartyPopper, UtensilsCrossed,
   type LucideIcon,
 } from 'lucide-react'
-import { company, activeClosure, isDateInClosure, formatClosureDate, type Closure } from '../data/site'
+import { company, activeClosure, isDateInClosure, closureRange, type Closure } from '../data/site'
 import Backdrop from '../components/Backdrop'
 import HoursList from '../components/HoursList'
+import HolidayHours from '../components/HolidayHours'
 import { FloatField, IconCards, SuccessCheck } from '../components/FluidField'
 
 // The reservation form books through Cambria's Hub (company.hubUrl). The
@@ -181,7 +182,7 @@ export default function Reservations() {
                     <span className="font-semibold text-oxblood">Please note:</span>{' '}
                     We&rsquo;ll be closed{' '}
                     <span className="font-semibold text-ink">
-                      {formatClosureDate(upcomingClosure.start)} – {formatClosureDate(upcomingClosure.end)}
+                      {closureRange(upcomingClosure)}
                     </span>{' '}
                     for {upcomingClosure.reason}. Reservations for those dates aren&rsquo;t available.
                   </p>
@@ -243,8 +244,7 @@ export default function Reservations() {
                       />
                       {dateBlockedBy && (
                         <p id="r-date-error" className="mt-1.5 text-[13px] text-oxblood">
-                          Closed for {dateBlockedBy.reason}. Please pick a date outside{' '}
-                          {formatClosureDate(dateBlockedBy.start)} – {formatClosureDate(dateBlockedBy.end)}.
+                          We&rsquo;re closed {closureRange(dateBlockedBy)} for {dateBlockedBy.reason}. Please pick another date.
                         </p>
                       )}
                     </div>
@@ -373,6 +373,7 @@ export default function Reservations() {
                 <h3 className="font-display text-headline-sm text-ink">Hours</h3>
               </div>
               <HoursList className="mt-3 -mx-2" />
+              <HolidayHours className="mt-7" />
             </div>
           </aside>
         </div>

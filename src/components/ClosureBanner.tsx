@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { activeClosure, formatClosureDate, type Closure } from '../data/site'
+import { activeClosure, closureRange, type Closure } from '../data/site'
 
 // Site-wide announcement bar surfaced whenever an upcoming or in-progress
 // closure is active (see data/site.ts `closures`). Fixed to the top with a
@@ -37,9 +37,7 @@ export default function ClosureBanner() {
           className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold-soft animate-pulse"
         />
         <span>
-          Closed {formatClosureDate(closure.start)}
-          <span className="mx-1 opacity-70">–</span>
-          {formatClosureDate(closure.end)} for {closure.reason}
+          Closed {closureRange(closure)} for {closure.reason}
         </span>
       </div>
     </div>

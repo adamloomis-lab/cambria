@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CalendarX, X } from 'lucide-react'
-import { activeClosure, formatClosureDate, reopenDate, type Closure } from '../data/site'
+import { activeClosure, closureRange, reopenDate, type Closure } from '../data/site'
 
 // One-time popup that surfaces an upcoming/in-progress closure the first time
 // a visitor lands on the site. Dismissed state is stored in localStorage keyed
@@ -127,11 +127,11 @@ export default function ClosureModal() {
           >
             The restaurant will be closed{' '}
             <span className="font-semibold text-ink">
-              {formatClosureDate(closure.start)} – {formatClosureDate(closure.end)}
+              {closureRange(closure)}
             </span>
             . We reopen{' '}
             <span className="font-semibold text-ink">{reopenDate(closure)}</span>.
-            If you were planning a visit that week, we&rsquo;d love to see you before or after.
+            If you were planning a visit then, we&rsquo;d love to see you before or after.
           </p>
           <button
             type="button"

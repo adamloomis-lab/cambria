@@ -2,6 +2,7 @@ import { Link } from 'wouter'
 import { Phone, MapPin, Facebook, Instagram, CalendarHeart, ShoppingBag } from 'lucide-react'
 import Logo from './Logo'
 import { company, hoursCompact } from '../data/site'
+import HolidayHours from './HolidayHours'
 
 const explore = [
   { label: 'Home', href: '/' },
@@ -102,6 +103,7 @@ export default function Footer() {
               </li>
             ))}
           </ul>
+          <HolidayHours tone="dark" className="mt-8" />
         </div>
 
         <div>

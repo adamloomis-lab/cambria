@@ -9,6 +9,7 @@ import SectionHeading from '../components/SectionHeading'
 import Divider from '../components/Divider'
 import Reviews from '../components/Reviews'
 import NyeFeature, { useNyeLive } from '../components/NyeFeature'
+import HolidayHours, { useHolidayHours } from '../components/HolidayHours'
 
 // Appetizing food shots that cross-fade behind the hero for gentle movement.
 const heroImages = [
@@ -41,6 +42,7 @@ function NyeHeroLink({ className }: { readonly className: string }) {
 
 export default function Home() {
   const nyeLive = useNyeLive()
+  const holidayLive = useHolidayHours().length > 0
   return (
     <>
       {/* ---------- HERO ---------- */}
@@ -76,6 +78,31 @@ export default function Home() {
 
       {/* ---------- NEW YEAR'S EVE (dated; hides itself after Dec 31) ---------- */}
       {nyeLive && <NyeFeature />}
+
+      {/* ---------- HOLIDAY HOURS (hides itself after Jan 1) ---------- */}
+      {holidayLive && (
+        <section id="holiday-hours" aria-labelledby="holiday-title" className="scroll-mt-20 border-b border-line bg-crema py-20 md:py-24">
+          <div className="container-x grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
+            <div className="reveal">
+              <h2 id="holiday-title" className="font-display text-headline-lg text-ink md:text-[44px]">
+                Holiday hours
+              </h2>
+              <p className="mt-6 max-w-lg text-body-lg text-ink-soft">
+                Planning a visit over the holidays? Here is when we are open and closed through New Year&rsquo;s Day.
+                Online reservations follow these hours.
+              </p>
+              <div className="mt-8">
+                <Button href="/reservations" variant="oxblood">
+                  Reserve a Table
+                </Button>
+              </div>
+            </div>
+            <div className="reveal border border-line bg-paper px-7 py-5">
+              <HolidayHours heading={false} />
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ---------- ABOUT TEASER ---------- */}
       <section className="bg-crema py-24 md:py-28">

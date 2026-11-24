@@ -9,6 +9,7 @@ import { Link } from 'wouter'
 import { company } from '../data/site'
 import { faqs } from '../lib/seo'
 import HoursList from '../components/HoursList'
+import HolidayHours from '../components/HolidayHours'
 import Backdrop from '../components/Backdrop'
 import { FloatField, IconCards, SuccessCheck } from '../components/FluidField'
 
@@ -131,6 +132,7 @@ export default function Contact() {
                 <h3 className="font-display text-headline-sm text-ink">Hours</h3>
               </div>
               <HoursList className="mt-4 -mx-2" />
+              <HolidayHours className="mt-7" />
             </div>
           </div>
 
